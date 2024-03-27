@@ -76,7 +76,7 @@ GROUP BY
     }
     public function showEmployeeCheckOutTime()
     {
-        $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$this->desiredUserId' order by check_in_time desc limit 1";
+        $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$this->desiredUserId' and deleted_at is null order by check_in_time desc limit 1";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
