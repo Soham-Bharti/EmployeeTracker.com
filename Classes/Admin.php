@@ -18,8 +18,8 @@ final class Admin extends dbConnection
 
     public function isEmployeeProfessionalInfoAdded($userId)
     {
-        $sql2 = "SELECT * FROM employeeDetails WHERE user_id = $userId AND deleted_at IS NULL;";
-        $result = mysqli_query($this->conn, $sql2);
+        $sql = "SELECT * FROM employeeDetails WHERE user_id = $userId AND deleted_at IS NULL;";
+        $result = mysqli_query($this->conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             return true;
         }
@@ -213,22 +213,14 @@ final class Admin extends dbConnection
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
-    public function totalEmployeesCount()
+    public function totalEmployeesCount($date)
     {
-        $sql = "SELECT count(id) as totalEmployeesCount from users where deleted_at is null and role = 'employee'";
+        $sql = "SELECT count(id) as totalEmployeesCount from users where deleted_at is null and role = 'employee' and DATE(users.created_at) <= '$date'";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
 
-    public function totalCheckedInUsersToday()
-    {
-        $sql = "SELECT DISTINCT u.name , u.id
-        FROM users u 
-        INNER JOIN employeetrackingdetails e ON e.user_id = u.id
-        WHERE e.deleted_at IS NULL AND DATE(e.check_in_time) = DATE(NOW());";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
+
 
     public function totalEmployeesWithNoProjects()
     {
@@ -241,24 +233,33 @@ final class Admin extends dbConnection
         return $result;
     }
 
-    public function showTodaysAbsentEmployees()
+    public function totalCheckedInUsersOnDate($date)
     {
-        $sql = "SELECT DISTINCT u.id, u.name
-        from users u
-        left join employeetrackingdetails etd
-        on etd.user_id = u.id and DATE(etd.check_in_time) = DATE(now()) and etd.deleted_at is null
-        where u.deleted_at is null and u.role = 'employee' and etd.id is null";
+        $sql = "SELECT DISTINCT u.name , e.user_id
+        FROM users u 
+        INNER JOIN employeetrackingdetails e ON e.user_id = u.id AND DATE(e.check_in_time) = '$date'
+        WHERE e.deleted_at IS NULL and u.deleted_at IS NULL and DATE(u.created_at) <= '$date' and u.role = 'employee';";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
 
-    public function showEmployeesWithLessWorkingHoursYesterday()
+    public function showAbsentEmployeesOnDate($date)
+    {
+        $sql = "SELECT DISTINCT u.name , u.id
+        FROM users u 
+        LEFT JOIN employeetrackingdetails e ON e.user_id = u.id AND DATE(e.check_in_time) = '$date'
+        WHERE e.deleted_at IS NULL and DATE(u.created_at) <= '$date' and u.role = 'employee' and e.id is null and u.deleted_at is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function showEmployeesWithLessWorkingHoursYesterday($date)
     {
         $sql = "SELECT DISTINCT u.id, u.name, COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds
         from users u
         left JOIN employeetrackingdetails e
-        on u.id = e.user_id and DATE(e.check_in_time) = SUBDATE(CURDATE(),1)
-        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null
+        on u.id = e.user_id and DATE(e.check_in_time) = SUBDATE('$date',1)
+        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null and DATE(u.created_at) <= '$date'
         GROUP BY u.id, e.user_id
         HAVING total_seconds < 31500";
         $result = mysqli_query($this->conn, $sql);
