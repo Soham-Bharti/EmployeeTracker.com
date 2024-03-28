@@ -10,6 +10,7 @@ $adminObject = new Admin();
 if ($_SESSION['role'] !== 'admin') {
     header('Location: ../start/login.php');
 }
+$date = date('Y-m-d');
 
 ?>
 
@@ -101,44 +102,36 @@ if ($_SESSION['role'] !== 'admin') {
                 ?>
             </div>
         </div>
-        <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2>
-        <div class="my-5 d-flex justify-content-evenly">
-            <div class="card" style="width: 17rem;">
-                <img class="card-img-top w-75 m-auto" src="../../Images/project.gif" alt="Card image cap">
-                <div class="card-body">
-                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Total Projects: </p>
-                        <?php
-                        $result = $projectObject->totalProjectsCount();
-                        if (mysqli_num_rows($result) > 0) {
-                            $row = mysqli_fetch_assoc($result);
-                            $totalProjects =  $row['totalProjectsCount'];
-                        }
-                        ?>
-                        <p class='fw-bold display-6'><?php echo $totalProjects; ?></p>
-                    </div>
-                    <a href="viewAllProjects.php" class="btn btn-primary w-100">Go to Projects</a>
-                </div>
+        <div class="d-flex gap-4 justify-content-between align-items-center">
+            <div class="">
+                <h2 class="text-center p-0 m-0">Showing <span class='text-primary'>analytical</span> details</h2>
             </div>
+            <div>
+                <label>Choose Date:</label>
+                <input type="date" class='p-2 mx-2 border border-info focus-ring rounded-2' name="inputDate" id='inputDate' onchange="changeAnalytics(this.value)" min='2024-03-16' max="<?= date('Y-m-d'); ?>" value='<?php echo $date; ?>'>
+            </div>
+        </div>
+        <!-- unvsdiu -->
+        <div class="my-5 d-flex justify-content-evenly" id="updatedContent">
             <div class="card" style="width: 17rem;">
                 <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Attendance Today's (<?php echo date('d-M');?>): </p>
+                        <p class="card-title fs-6">Attendance on <br/>(<span id='todayAttendanceDate'><?php echo $date ?></span>): </p>
                         <?php
-                        $result = $adminObject->totalEmployeesCount();
+                        $result = $adminObject->totalEmployeesCount($date);
                         if (mysqli_num_rows($result) > 0) {
                             $row = mysqli_fetch_assoc($result);
                             $totalEmployeesCount =  $row['totalEmployeesCount'];
                         }
-                        $result = $adminObject->totalCheckedInUsersToday();
+                        $result = $adminObject->totalCheckedInUsersOnDate($date);
                         $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
                         ?>
                         <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
                     </div>
                     <?php
                     $absentEmployees = [];
-                    $result = $adminObject->showTodaysAbsentEmployees();
+                    $result = $adminObject->showAbsentEmployeesOnDate($date);
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             array_push($absentEmployees,  $row['name']);
@@ -169,13 +162,15 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Less Hour (<?php echo date('d-M', strtotime('yesterday'));?>): </p>
+                        <p class="card-title fs-6">Work Time < 8.45Hrs. on <br/>(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>): </p>
                         <?php
-                        $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday();
+                        $yesterdayDate = date($date, strtotime("-1 days"));
+                        $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday($date);
                         if (mysqli_num_rows($result) > 0) {
-                            $showEmployeesWithLessWorkingHoursYesterdayArray = [];
+                            // $showEmployeesWithLessWorkingHoursYesterdayArray = [];
                             while ($row = mysqli_fetch_assoc($result)) {
-                                array_push($showEmployeesWithLessWorkingHoursYesterdayArray,  $row['name']);
+                                // array_push($showEmployeesWithLessWorkingHoursYesterdayArray,  $row['name']);
+                                $showEmployeesWithLessWorkingHoursYesterdayArray[$row['name']] = $row['total_seconds'];
                             }
                         }
                         ?>
@@ -191,10 +186,15 @@ if ($_SESSION['role'] !== 'admin') {
                             <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
                                 <div class="accordion-body">
                                     <?php
-                                    foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name) {
-                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                            }
-                                                                                ?>
+                                    foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name => $total_seconds) {
+                                        $hours = floor($total_seconds / 3600);
+                                        $minutes = floor(($total_seconds % 3600) / 60);
+                                        $seconds = $total_seconds % 60;
+                                        $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+                                    ?><p><?php echo explode(' ', $name)[0] . " - $formatted_time" ?></p>
+                                        <hr><?php
+                                        }
+                                            ?>
                                 </div>
                             </div>
                         </div>
@@ -205,9 +205,10 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top w-75 m-auto" src="../../Images/pms.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Missed PMS (<?php echo date('d-M', strtotime('yesterday'));?>): </p>
+                        <p class="card-title fs-6">Missed PMS on <br/>(<span id='yesterdayPMSDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date)));?></span>): </p>
                         <?php
-                        $result = $projectObject->employeesWithNoPMSYesterday();
+                        $yesterdayDate = date($date, strtotime("-1 days"));
+                        $result = $projectObject->employeesWithNoPMSYesterday($date);
                         if (mysqli_num_rows($result) > 0) {
                             $employeesWithNoPMSYesterdayArray = [];
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -221,7 +222,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
-                                    Show Member
+                                    Show Members
                                 </button>
                             </h2>
                             <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
@@ -237,6 +238,29 @@ if ($_SESSION['role'] !== 'admin') {
                     </div>
                 </div>
             </div>
+        </div>
+        <hr>
+        <div class="my-5 d-flex justify-content-evenly">
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top w-75 m-auto" src="../../Images/project.gif" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-6">Total Projects: </p>
+                        <?php
+                        $result = $projectObject->totalProjectsCount();
+                        if (mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            $totalProjects =  $row['totalProjectsCount'];
+                        }
+                        ?>
+                        <p class='fw-bold display-6'><?php echo $totalProjects; ?></p>
+                    </div>
+                    <a href="viewAllProjects.php" class="btn btn-primary w-100">Go to Projects</a>
+                </div>
+            </div>
+            <!-- fws -->
+
+            <!-- more -->
             <div class="card" style="width: 17rem;">
                 <img class="card-img-top w-75 m-auto" src="../../Images/management.gif" alt="Card image cap">
                 <div class="card-body">
@@ -278,7 +302,6 @@ if ($_SESSION['role'] !== 'admin') {
             </div>
         </div>
     </div>
-
     <!-- footer here -->
     <?php include('../common/footer.php'); ?>
     <!-- footer ends -->
@@ -289,6 +312,53 @@ if ($_SESSION['role'] !== 'admin') {
     <script>
         new DataTable('#adminDashboardEmployeesTable');
     </script>
+    <script>
+        $(document).ready(function() {
+            $('#inputDate').change(function() {
+                var selectedDate = $(this).val();
+                // alert(selectedDate);
+                if (selectedDate != '') {
+                    $.ajax({
+                        url: 'dynamicContent.php',
+                        type: 'POST',
+                        data: {
+                            newDate: selectedDate
+                        },
+                        success: function(response) {
+                            $('#updatedContent').html(response);
+                            // alert(response);
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+        function changeAnalytics(val) {
+            var pastDate = new Date(val);
+            var yesterdayDate = new Date(new Date().setDate(pastDate.getDate() - 1));
+            var formattedYesterdayDate = formatDate(yesterdayDate);
+            // console.log(formattedYesterdayDate);
+            document.getElementById("inputDate").values = val;
+            document.getElementById("todayAttendanceDate").innerHTML = val;
+            document.getElementById("yesterdayWorkingDate").innerHTML = formattedYesterdayDate;
+            document.getElementById("yesterdayPMSDate").innerHTML = formattedYesterdayDate;
+        }
+
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 
 </html>
