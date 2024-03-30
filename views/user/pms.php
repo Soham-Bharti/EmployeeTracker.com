@@ -19,7 +19,8 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMS | <?php echo $_SESSION['userName']; ?> </title>
-    <link rel="stylesheet" href="../../Styles/pms.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/view-pms.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -54,7 +55,7 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to your <span class='text-info'>PMS</span> dashboard</h2>
+    <h2 class="text-center mt-3">Welcome to your <span class='gradient-custom-2'>PMS</span> dashboard</h2>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
@@ -115,7 +116,7 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
             </div>
         <?php } $_SESSION['AddDailyTaskStatus'] = ''; ?>
         <!-- toast ends -->
-        <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> activity</h2>
+        <h2 class="text-center mt-5">Showing your <span class='gradient-custom-1'>LAST 10</span> activity</h2>
         <div class="mt-3">
             <table>
                 <tr>

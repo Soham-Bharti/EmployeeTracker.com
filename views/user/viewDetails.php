@@ -69,7 +69,8 @@ if (isset($desiredUserId)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo explode(' ', $name)[0] ?> - Details</title>
-    <link rel="stylesheet" href="../../Styles/updateemployee.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/update-Employee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -93,7 +94,7 @@ if (isset($desiredUserId)) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='text-info'><?php echo $name ?></span> - All Details</h2>
+    <h2 class="text-center mt-2"><span class='gradient-custom-2'><?php echo $name ?></span> - All Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">

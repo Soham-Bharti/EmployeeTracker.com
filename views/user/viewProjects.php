@@ -19,7 +19,8 @@ if (isset($_SESSION["id"])) $desiredUserId = $_SESSION["id"];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Projects</title>
-    <link rel="stylesheet" href="../../Styles/viewProjects.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/view-Projects.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -48,7 +49,7 @@ if (isset($_SESSION["id"])) $desiredUserId = $_SESSION["id"];
     </nav>
     <!-- nav ends -->
     <div class="container mt-5 px-5">
-        <h2 class="text-center mt-5">Showing your <span class='text-primary'>assigned Projects'</span> details</h2>
+        <h2 class="text-center mt-5">Showing your <span class='gradient-custom-2'>assigned Projects'</span> details</h2>
         <div class="mt-3">
             <table id="projectsTable" class="table table-striped table-hover">
                 <thead>

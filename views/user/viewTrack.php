@@ -19,7 +19,8 @@ $userObject = new User($desiredUserId);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Working Hours</title>
-    <link rel="stylesheet" href="../../Styles/userdashboard.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/user-Dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -45,7 +46,7 @@ $userObject = new User($desiredUserId);
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Employee <span class='text-info'>Working Hours'</span> dashboard</h2>
+    <h2 class="text-center mt-3">Employee <span class='gradient-custom-2'>Working Hours'</span> dashboard</h2>
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -57,7 +58,7 @@ $userObject = new User($desiredUserId);
                         $userName = $row['name'];
                     }
                 }
-                echo "Emp Id: " . $desiredUserId . " | " . $userName;
+                echo "Emp Id: <b>" . $desiredUserId . "</b> | " . $userName;
                 ?>
             </div>
             <div>
@@ -75,17 +76,17 @@ $userObject = new User($desiredUserId);
                 <?php
                 if ($showStatus === 'check-in') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='text-success'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold text-success'><?php echo $showStatus ?></span></h4>
                 <?php } else if ($showStatus === 'check-out') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='text-danger'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold text-danger'><?php echo $showStatus ?></span></h4>
                 <?php } else { ?>
-                    <h4 class="text-center mt-3">Emp will do <span class='text-warning'>FIRST</span> check-in!</h4>
+                    <h4 class="text-center mt-3">Emp will do <span class='fw-bold text-warning'>FIRST</span> check-in!</h4>
                 <?php } ?>
             </div>
         </div>
 
-        <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
+        <h2 class="text-center mt-5">Showing <span class='gradient-custom-3'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
                 <tr class="text-dark">

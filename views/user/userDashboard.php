@@ -29,7 +29,8 @@ if (isset($_POST['check-out-submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | <?php echo $_SESSION['userName']; ?> </title>
-    <link rel="stylesheet" href="../../Styles/userdashboard.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/user-Dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -70,7 +71,7 @@ if (isset($_POST['check-out-submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
+    <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-2'>User</span> dashboard</h2>
     <?php
     $showStatus = '';
     $result = $userObject->showEmployeeCheckOutTime();
@@ -84,12 +85,12 @@ if (isset($_POST['check-out-submit'])) {
     <?php
     if ($showStatus === 'check-in') {
     ?>
-        <h4 class="text-center mt-3">You are currently <span class='text-success'><?php echo $showStatus ?></span></h4>
+        <h4 class="text-center mt-3">You are currently <span class='fw-bold gradient-custom-3'><?php echo $showStatus ?></span></h4>
     <?php } else if ($showStatus === 'check-out') {
     ?>
-        <h4 class="text-center mt-3">You are currently <span class='text-danger'><?php echo $showStatus ?></span></h4>
+        <h4 class="text-center mt-3">You are currently <span class='fw-bold gradient-custom-1'><?php echo $showStatus ?></span></h4>
     <?php } else { ?>
-        <h4 class="text-center mt-3">Do your <span class='text-warning'>FIRST</span> check-in!</h4>
+        <h4 class="text-center mt-3">Do your <span class='fw-bold gradient-custom-2'>FIRST</span> check-in!</h4>
     <?php } ?>
 
     <div class="container mt-5">
@@ -177,7 +178,7 @@ if (isset($_POST['check-out-submit'])) {
         <?php }
         $_SESSION['AddDailyTaskStatus'] = ''; ?>
         <!-- toast ends -->
-        <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> tracks</h2>
+        <h2 class="text-center mt-5">Showing your <span class='gradient-custom-3'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
                 <tr>

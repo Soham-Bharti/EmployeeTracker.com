@@ -100,7 +100,8 @@ if (isset($_POST['change'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Changing Password...</title>
-    <link rel="stylesheet" href="../../Styles/updateemployee.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/update-Employee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -124,7 +125,7 @@ if (isset($_POST['change'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">Change your current <span class='text-info'>Password</span></h2>
+    <h2 class="text-center mt-2">Change your current <span class='gradient-custom-1'>Password</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
