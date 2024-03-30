@@ -145,19 +145,20 @@ if (isset($_POST['submit'])) {
     if ($flag && $_FILES['image']['name'] !== '') {
         $desiredResult = $fileUploadObject->upload($name);
         if (!strpos($desiredResult, ' ')) {
-            $fileNameNew = $desiredResult;
+            $fileNewName = $desiredResult;
         } else {
             $imageErr = $desiredResult;
             $flag = false;
         }
-    } else $fileNameNew = $profile;
+    } else $fileNewName = $profile;
 
 
     // print_r($_POST);
 
     if ($flag) {
         // sending data to data base
-        $result = $adminObject->updateEmployeeBasicDetails($name, $email, $mobile, $address, $gender, $dob, $city, $state, $fileNameNew, $id);
+        $params = ['name' => $name, 'email' => $email, 'mobile' => $mobile, 'address' => $address, 'gender' => $gender, 'dob' => $dob, 'city' => $city, 'state' => $state, 'fileNewName' => $fileNewName, 'id' => $id];
+        $result = $adminObject->updateEmployeeBasicDetails(...$params);
         if ($result) {
             echo "<br>Record updated successfully<br>";
             $_SESSION['UpdateStatus'] = 'success';
@@ -178,7 +179,8 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Employee</title>
-    <link rel="stylesheet" href="../../Styles/updateemployee.css">
+    <?php include('../common/favicon.php'); ?>
+    <link rel="stylesheet" href="../../Styles/update-Employee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -202,7 +204,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employees' Personal Details</h2>
+    <h2 class="text-center mt-2"><span class="gradient-custom-2">Update</span> Employees' <span>Personal</span> Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <!-- toast after fail updation -->

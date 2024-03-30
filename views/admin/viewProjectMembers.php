@@ -37,7 +37,8 @@ function test_input($data)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Memeber/s in the Project</title>
-    <link rel="stylesheet" href="../../Styles/showProjectMembers.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/view-ProjectMembers.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -76,7 +77,7 @@ function test_input($data)
     }
     ?>
 
-    <h2 class="text-center mt-2"><span class='text-info'>All</span> Member/s in <span class="text-danger"><?php echo $title ?></span> Project</h2>
+    <h2 class="text-center mt-2"><span class='gradient-custom-2'>All</span> Member/s in <span class="gradient-custom-1"><?php echo $title ?></span> Project</h2>
     <div class="container mt-5 px-5 w-100">
         <table>
             <thead>

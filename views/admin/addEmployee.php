@@ -139,7 +139,7 @@ if (isset($_POST['submit'])) {
     if ($flag && $_FILES['image']['name'] !== '') {
         $desiredResult = $fileUploadObject->upload($name);
         if (!strpos($desiredResult, ' ')) {
-            $fileNameNew = $desiredResult;
+            $fileNewName = $desiredResult;
         } else {
             $imageErr = $desiredResult;
             $flag = false;
@@ -149,8 +149,9 @@ if (isset($_POST['submit'])) {
     if ($flag) {
         // sending data to data base
         $hashedPassword = md5($password);
-        if (!isset($_FILES['image'])) $fileNameNew = NULL;
-        $result = $adminObject->addEmployee($role, $name, $email, $hashedPassword, $gender, $mobile, $dob, $address, $city, $state, $fileNameNew);
+        if (!isset($_FILES['image'])) $fileNewName = NULL;
+        $params = ['role' => $role, 'name' => $name, 'email' => $email, 'hashedPassword' => $hashedPassword, 'gender' => $gender, 'mobile' => $mobile, 'dob' => $dob, 'address' => $address, 'city' => $city, 'state' => $state, 'fileNewName' => $fileNewName];
+        $result = $adminObject->addEmployee($params);
         if ($result) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddStatus'] = 'success';
@@ -170,7 +171,8 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Employee Registration</title>
-    <link rel="stylesheet" href="../../Styles/addEmployee.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/add-Employee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -195,17 +197,10 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">New <span class='text-info'>Employee</span> Registration</h2>
+    <h2 class="text-center mt-2">New <span class='gradient-custom-2'>Employee</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
-                <!-- <div class="mb-3">
-                    <label class="col-form-label"> Register as</label>
-                    <select class="form-select" aria-label="Default select example" name="role">
-                        <option value="admin" disabled>Admin</option>
-                        <option value="employee" selected>Employee</option>
-                    </select>
-                </div> -->
                 <div class="mb-3">
                     <label class="col-form-label">Name <span>* <?php echo $nameErr ?></span></label>
                     <div class="mb-3">

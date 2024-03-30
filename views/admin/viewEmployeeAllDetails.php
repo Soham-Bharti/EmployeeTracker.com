@@ -15,67 +15,49 @@ $name = $email = $mobile = $profile = $gender = $city = $state = $dob = $tech = 
 $formatted_time = $bond_period_years = $bond_period_months = $notice_period_months = $notice_period_days  = 'N/A';
 $salary = $numberOfDays = $desiredSalaryToPay = $perHourSalary = $perMinuteSalary = $total_seconds = 0;
 if (isset($desiredUserId)) {
-    $result = $adminObject->isEmployeeAllDetailsAvalable($desiredUserId);
-    if (!mysqli_num_rows($result) > 0) {
-        $result = $adminObject->showEmployeeAllDetails($desiredUserId);
-        if (mysqli_num_rows($result) > 0) {
-            $row1 = mysqli_fetch_assoc($result);
-            $name = $row1['name'];
-            $email = $row1['email'];
-            $mobile = $row1['mobile'];
-            $profile = $row1['profile_url'];
-            if (empty($profile)) {
-                $profile = 'defaultImg.webp';
-            }
-            $gender = $row1['gender'];
-            $city = $row1['city'];
-            $state = $row1['state'];
-            $dob = $row1['date_of_birth'];
+    $result = $adminObject->showEmployeeAllDetails($desiredUserId);
+    if (mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
+        $name = $row['name'];
+        $email = $row['email'];
+        $mobile = $row['mobile'];
+        $profile = $row['profile_url'];
+        if (empty($profile)) {
+            $profile = 'defaultImg.webp';
         }
-    } else {
-        $result = $adminObject->showEmployeeAllDetails($desiredUserId);
-        if (mysqli_num_rows($result) == 1) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $name = $row['name'];
-                $email = $row['email'];
-                $mobile = $row['mobile'];
-                $profile = $row['profile_url'];
-                if (empty($profile)) {
-                    $profile = 'defaultImg.webp';
-                }
-                $gender = $row['gender'];
-                $city = $row['city'];
-                $state = $row['state'];
-                $dob = $row['date_of_birth'];
-                $tech = $row['technology_assigned'];
-                $total_seconds = $row['total_seconds'];
-                $joining_date = $row['joining_date'];
-                $salary = $row['salary'];
-                if (empty($salary)) $salary = 'N/A';
-                $bond_period = $row['bond_period'];
-                if (empty($bond_period)) {
-                    $bond_period_years = 'N/A';
-                    $bond_period_months = 'N/A';
-                } else {
-                    $bond_period_years = explode(' ', $bond_period)[0];
-                    $bond_period_months = explode(' ', $bond_period)[2];
-                }
-                $notice_period = $row['notice_period'];
-                if (empty($notice_period)) {
-                    $notice_period_months = 'N/A';
-                    $notice_period_days = 'N/A';
-                } else {
-                    $notice_period_months = explode(' ', $notice_period)[0];
-                    $notice_period_days = explode(' ', $notice_period)[2];
-                }
+        $gender = $row['gender'];
+        $city = $row['city'];
+        $state = $row['state'];
+        $dob = $row['date_of_birth'];
+        $tech = $row['technology_assigned'];
+        $total_seconds = $row['total_seconds'];
+        $joining_date = $row['joining_date'];
+        $registrationDateTime = $row['created_at'];
+        $registrationTime = strtotime($registrationDateTime);
+        $salary = $row['salary'];
+        if (empty($salary)) $salary = 'N/A';
+        $bond_period = $row['bond_period'];
+        if (empty($bond_period)) {
+            $bond_period_years = 'N/A';
+            $bond_period_months = 'N/A';
+        } else {
+            $bond_period_years = explode(' ', $bond_period)[0];
+            $bond_period_months = explode(' ', $bond_period)[2];
+        }
+        $notice_period = $row['notice_period'];
+        if (empty($notice_period)) {
+            $notice_period_months = 'N/A';
+            $notice_period_days = 'N/A';
+        } else {
+            $notice_period_months = explode(' ', $notice_period)[0];
+            $notice_period_days = explode(' ', $notice_period)[2];
+        }
 
-                // seconds to hours, minutes and seconds
-                $hours = floor($total_seconds / 3600);
-                $minutes = floor(($total_seconds % 3600) / 60);
-                $seconds = $total_seconds % 60;
-                $formatted_time = sprintf("%02d Hours %02d Minutes %02d Seconds", $hours, $minutes, $seconds);
-            }
-        }
+        // seconds to hours, minutes and seconds
+        $hours = floor($total_seconds / 3600);
+        $minutes = floor(($total_seconds % 3600) / 60);
+        $seconds = $total_seconds % 60;
+        $formatted_time = sprintf("%02d Hours %02d Minutes %02d Seconds", $hours, $minutes, $seconds);
     }
 } else {
     echo "User Id not set!";
@@ -90,7 +72,8 @@ if (isset($desiredUserId)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo explode(' ', $name)[0] ?> - Details</title>
-    <link rel="stylesheet" href="../../Styles/updateemployee.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/viewEmployee-AllDetails.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -117,22 +100,22 @@ if (isset($desiredUserId)) {
         </div>
     </nav>
     <!-- nav ends -->
-            <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
-                <div class="toast show m-auto hide">
-                    <div class="toast-header bg-warning text-white">
-                        <strong class="me-auto">Record updated successfully!</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            <?php }
-            $_SESSION['UpdateStatus'] = '' ?>
-    <h2 class="text-center mt-2"><span class='text-info'>View</span> Employees' All Details</h2>
+    <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-warning text-white">
+                <strong class="me-auto">Record updated successfully!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['UpdateStatus'] = '' ?>
+    <h2 class="text-center mt-2"><span class='gradient-custom-1'>View</span> Employees' All <span class='gradient-custom-2'>Details</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <!-- toast after successful update -->
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
                 <div class="d-inline-block profile-img w-25">
-                    <img src="<?php echo "../../Images/" . $profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
+                    <img src="<?php echo "../../Images/" . $profile ?>" alt="No profile to show" class="shadow img-thumbnail object-fit-contain border rounded-circle  mb-2">
                 </div>
                 <div class='text-center'>
                     <p class='d-flex justify-content-center align-items-center gap-2'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge" viewBox="0 0 16 16">
@@ -153,6 +136,9 @@ if (isset($desiredUserId)) {
                             <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791" />
                         </svg><span class="fw-bold text-secondary"><?php echo $email ?></span>
                     </p>
+                    <p class='d-flex justify-content-center align-items-center gap-2'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event-fill" viewBox="0 0 16 16">
+                            <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-3.5-7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5" />
+                        </svg><span class="fw-bold text-secondary"><?php echo date('d M Y - H:ia', $registrationTime); ?></span></p>
                 </div>
             </div>
             <hr>

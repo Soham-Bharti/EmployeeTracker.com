@@ -36,14 +36,14 @@ if (isset($_POST['submit'])) {
 
     if (empty($description)) {
     } else {
-        if (!preg_match("/^[a-zA-Z0-9-' ]*$/", $description)) {
-            $descErr = "* Only letters, white space and numbers allowed";
-            $flag = false;
-        }
+        // if (!preg_match("/^[a-zA-Z0-9-' ]*$/", $description)) {
+        //     $descErr = "* Only letters, white space and numbers allowed";
+        //     $flag = false;
+        // }
     }
 
     if ($flag) {
-        $result = $projectObject -> add($title, $description);
+        $result = $projectObject->add($title, $description);
         if ($result) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddProjectStatus'] = 'success';
@@ -63,32 +63,33 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Project Registration</title>
-    <link rel="stylesheet" href="../../Styles/addProject.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/add-Project.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
                 <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
-    
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="viewAllProjects.php">Back</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-   
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="viewAllProjects.php">Back</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">New <span class='text-info'>Project</span> Registration</h2>
+    <h2 class="text-center mt-2">New <span class='gradient-custom-2'>Project</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
@@ -100,9 +101,9 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Description <span><?php echo $descErr ?></span></label>
-                    <input type="text" class="form-control" name="description" placeholder="All about FFB...">
+                    <textarea class="form-control" name="description" placeholder="All about FFB..." rows="7"></textarea>
                 </div>
-            
+
                 <div class="buttons">
                     <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Add Project">
                     <input type="reset" name="reset" class="btn btn-dark btn-lg">
@@ -113,7 +114,7 @@ if (isset($_POST['submit'])) {
     </div>
 
     <!-- footer here -->
-    <?php include('../common/footer.php');?>
+    <?php include('../common/footer.php'); ?>
     <!-- footer ends -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

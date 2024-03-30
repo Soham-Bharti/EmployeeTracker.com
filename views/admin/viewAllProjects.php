@@ -31,7 +31,8 @@ if (isset($_GET['delete_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Projects</title>
-    <link rel="stylesheet" href="../../Styles/viewProjects.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/view-Projects.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -63,7 +64,7 @@ if (isset($_GET['delete_id'])) {
     </nav>
     <!-- nav ends -->
     <div class="container mt-5 px-5">
-        <h2 class="text-center mt-5">Showing <span class='text-primary'>Projects'</span> details</h2>
+        <h2 class="text-center mt-5">Showing <span class='gradient-custom-2'>Projects'</span> details</h2>
         <div class="mt-3">
             <!-- toast after successful project updation -->
             <?php if (isset($_SESSION['updateProjectDetailsStatus']) && $_SESSION['updateProjectDetailsStatus'] == 'success') { ?>
@@ -121,7 +122,7 @@ if (isset($_GET['delete_id'])) {
                         <th>ID</th>
                         <th>Title</th>
                         <th>Description</th>
-                        <th>Started on</th>
+                        <th>Started on - at</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -139,8 +140,8 @@ if (isset($_GET['delete_id'])) {
                         <tr>
                             <td><?php echo $row["id"] ?></td>
                             <td class='w-25 fw-bold'><?php echo $row["title"] ?></td>
-                            <td class='w-25'><?php echo $row["description"] == '' ? 'N/A' : $row["description"] ?></td>
-                            <td class='w-25'><?php echo date('d M Y', $time); ?></td>
+                            <td class='w-25'><?php echo $row["description"] == '' ? 'N/A' : ( strlen($row["description"]) > 100 ? substr($row["description"], 0, 100)."..." : $row["description"]) ?></td>
+                            <td class='w-25'><?php echo date('d M Y - H:ia', $time); ?></td>
                             <td>
                                 <a href="updateProjectDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">Update</a>
                             </td>

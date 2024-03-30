@@ -73,8 +73,8 @@ if (isset($_POST['update'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Project</title>
-    <link rel="icon" type="image/x-icon" href="../../Images/project.gif">
-    <link rel="stylesheet" href="../../Styles/updateProjectDetails.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/update-ProjectDetails.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -98,7 +98,7 @@ if (isset($_POST['update'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='text-info'>Update</span> Projects' Details</h2>
+    <h2 class="text-center mt-2"><span class='gradient-custom-1'>Update</span> Projects' Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
@@ -120,7 +120,7 @@ if (isset($_POST['update'])) {
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Description <span><?php echo $descErr ?></span></label>
-                    <input type="text" class="form-control" name="description" placeholder="N/A" value="<?php echo $description?>">
+                    <textarea class="form-control" name="description" placeholder="All about the PROJECT..." rows="7"><?php echo $description?></textarea>
                 </div>
                 
                 <input type="hidden" class="form-control" name="desiredProjectId" value="<?php echo $desiredProjectId?>">

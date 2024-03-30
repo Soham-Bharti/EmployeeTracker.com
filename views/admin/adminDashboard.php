@@ -21,7 +21,8 @@ $date = date('Y-m-d');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
-    <link rel="stylesheet" href="../../Styles/adminDashboard.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/admin-Dashboard.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -55,7 +56,7 @@ $date = date('Y-m-d');
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the <span class='text-info'>admin</span> dashboard</h2>
+    <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-1'>admin</span> dashboard</h2>
 
     <!-- toast after successful added -->
     <?php if (isset($_SESSION['AddStatus']) && $_SESSION['AddStatus'] == 'success') { ?>
@@ -104,7 +105,7 @@ $date = date('Y-m-d');
         </div>
         <div class="d-flex gap-4 justify-content-between align-items-center">
             <div class="">
-                <h2 class="text-center p-0 m-0">Showing <span class='text-primary'>analytical</span> details</h2>
+                <h2 class="text-center p-0 m-0">Showing <span class='gradient-custom-2'>analytical</span> details</h2>
             </div>
             <div>
                 <label>Choose Date:</label>

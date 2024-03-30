@@ -26,7 +26,8 @@ if (isset($_GET['desiredUserId'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Employees details</title>
-    <link rel="stylesheet" href="../../Styles/viewAllEmployees.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/viewAll-Employees.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -99,7 +100,7 @@ if (isset($_GET['desiredUserId'])) {
                 </form> -->
             </div>
         </div>
-        <h2 class="text-center">Showing <span class='text-info'>Employees'</span> details</h2>
+        <h2 class="text-center">Showing <span class='gradient-custom-1'>Employees'</span> details</h2>
         <!-- toast after successful delete -->
         <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
@@ -156,8 +157,8 @@ if (isset($_GET['desiredUserId'])) {
                 ?>
                         <tr>
                             <td><?php echo $row["id"] ?></td>
-                            <td class="w-25">
-                                <img src="<?php echo $row["profile_url"] ? "../../Images/" . $row["profile_url"] : "../../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
+                            <td class="w-50">
+                                <img src="<?php echo $row["profile_url"] ? "../../Images/" . $row["profile_url"] : "../../Images/defaultImg.webp" ?>" alt="No profile to show" class="w-75 img-thumbnail object-fit-contain border rounded-circle ">
                             </td>
                             <td class='w-50'><?php echo $row["name"] ?></td>
                             <td><?php echo $row["email"] ?></td>
@@ -194,6 +195,7 @@ if (isset($_GET['desiredUserId'])) {
                                 <!-- <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a> -->
                                 <a onclick="return confirm('Are you sure you want to delete this Employee?')" href="?desiredUserId=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
                             </td>
+
                         </tr>
                 <?php
                     }

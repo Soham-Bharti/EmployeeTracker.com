@@ -67,7 +67,8 @@ if (isset($_POST['add'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Memeber/s</title>
-    <link rel="stylesheet" href="../../Styles/addProjctMember.css">
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/add-ProjctMember.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -107,7 +108,7 @@ if (isset($_POST['add'])) {
         }
     }
     ?>
-    <h2 class="text-center mt-2"><span class='text-info'>Add</span> Member/s in <span text-danger><?php echo $title ?></span> Project</h2>
+    <h2 class="text-center mt-2"><span class='gradient-custom-2'>Add</span> Member/s in <span class='gradient-custom-1'><?php echo $title ?></span> Project</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
