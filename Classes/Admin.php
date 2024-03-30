@@ -31,7 +31,7 @@ final class Admin extends dbConnection
         return false;
     }
 
-    public function addEmployee(...$params)
+    public function addEmployee($params)
     {
         $role = $params['role'];
         $name = $params['name'];

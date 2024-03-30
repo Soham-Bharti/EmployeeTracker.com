@@ -141,15 +141,14 @@ if (isset($_POST['submit'])) {
         if (!strpos($desiredResult, ' ')) {
             $fileNewName = $desiredResult;
         } else {
-            $imageErr = $desiredResult;
+            $imageErr = "* $desiredResult";
             $flag = false;
         }
-    }
+    }else $fileNewName = NULL;
 
     if ($flag) {
         // sending data to data base
         $hashedPassword = md5($password);
-        if (!isset($_FILES['image'])) $fileNewName = NULL;
         $params = ['role' => $role, 'name' => $name, 'email' => $email, 'hashedPassword' => $hashedPassword, 'gender' => $gender, 'mobile' => $mobile, 'dob' => $dob, 'address' => $address, 'city' => $city, 'state' => $state, 'fileNewName' => $fileNewName];
         $result = $adminObject->addEmployee($params);
         if ($result) {
@@ -255,7 +254,7 @@ if (isset($_POST['submit'])) {
                     <input type="date" class="form-control" name="dob">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Profile Piture <span>* <?php echo $imageErr ?></span></label>
+                    <label class="form-label">Profile Piture <span><?php echo $imageErr ?></span></label>
                     <input class="form-control" type="file" name="image">
                 </div>
                 <div class="mb-3">
