@@ -2,7 +2,9 @@
 session_start();
 require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
+require '../../Classes/FileUpload.php';
 $adminObject = new Admin();
+$fileUploadObject = new FileUpload();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -139,58 +141,14 @@ if (isset($_POST['submit'])) {
         $flag = false;
         $_SESSION['UpdateStatus'] = 'fail';
     }
-    echo $profile;
 
-    print_r($_FILES['image']);
     if ($flag && $_FILES['image']['name'] !== '') {
-        // echo 'Inside';
-        $fileName = $_FILES['image']['name'];
-        $fileTmpName = $_FILES['image']['tmp_name'];
-        $fileSize = $_FILES['image']['size'];
-        $fileError = $_FILES['image']['error'];
-        $fileType = $_FILES['image']['type'];
-        $fileExtension = explode('.', $fileName);
-        $fileActualExtension = strtolower(end($fileExtension)); // jpeg
-
-        $allowed = array('jpeg', 'jpg', 'png');
-
-        if (in_array($fileActualExtension, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 50000000000) { // 500kb =  500000b 
-                    $nameArr = explode(' ', $name);
-                    $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
-                    $fileDestination = '../../Images/' . $fileNameNew;
-                    // echo "LOCATION___" . $fileDestination;
-                    if (!file_exists($fileName)) {
-                        if (move_uploaded_file(
-                            $fileTmpName,
-                            $fileDestination
-                        )) {
-                            // echo "Successfully uploaded your image";
-                        } else {
-                            $imageErr =  "Failed to upload your image";
-                            $flag = false;
-                            $_SESSION['UpdateStatus'] = 'fail';
-                        }
-                    } else {
-                        $imageErr = "File already exists!";
-                        $flag = false;
-                        $_SESSION['UpdateStatus'] = 'fail';
-                    }
-                } else {
-                    $imageErr = "FILE  TOO LARGE!";
-                    $flag = false;
-                    $_SESSION['UpdateStatus'] = 'fail';
-                }
-            } else {
-                $imageErr = "There was file error";
-                $flag = false;
-                $_SESSION['UpdateStatus'] = 'fail';
-            }
+        $desiredResult = $fileUploadObject->upload($name);
+        if (!strpos($desiredResult, ' ')) {
+            $fileNameNew = $desiredResult;
         } else {
-            $imageErr = "Only .png, .jpg, .jpeg supported";
+            $imageErr = $desiredResult;
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     } else $fileNameNew = $profile;
 

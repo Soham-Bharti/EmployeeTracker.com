@@ -1,8 +1,10 @@
 <?php
 session_start();
 require_once '../../config/dbConnection.php';
-require '../../Classes/Admin.php';
+require_once '../../Classes/Admin.php';
+require_once '../../Classes/FileUpload.php';
 $adminObject = new Admin();
+$fileUploadObject = new FileUpload();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -19,6 +21,7 @@ function test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+
 $flag = true;
 if (isset($_POST['submit'])) {
     // print_r($_POST);
@@ -134,46 +137,11 @@ if (isset($_POST['submit'])) {
     }
 
     if ($flag && $_FILES['image']['name'] !== '') {
-        $fileName = $_FILES['image']['name'];
-        $fileTmpName = $_FILES['image']['tmp_name'];
-        $fileSize = $_FILES['image']['size'];
-        $fileError = $_FILES['image']['error'];
-        $fileType = $_FILES['image']['type'];
-        $fileExtension = explode('.', $fileName);
-        $fileActualExtension = strtolower(end($fileExtension)); // jpeg
-
-        $allowed = array('jpeg', 'jpg', 'png');
-
-        if (in_array($fileActualExtension, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 50000000000) { // 500kb =  500000b 
-                    $nameArr = explode(' ', $name);
-                    $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
-                    $fileDestination = '../../Images/' . $fileNameNew;
-                    if (!file_exists($fileName)) {
-                        if (move_uploaded_file(
-                            $fileTmpName,
-                            $fileDestination
-                        )) {
-                            // echo "Successfully uploaded your image";
-                        } else {
-                            $imageErr =  "Failed to upload your image";
-                            $flag = false;
-                        }
-                    } else {
-                        $imageErr = "File already exists!";
-                        $flag = false;
-                    }
-                } else {
-                    $imageErr = "FILE  TOO LARGE!";
-                    $flag = false;
-                }
-            } else {
-                $imageErr = "There was file error";
-                $flag = false;
-            }
+        $desiredResult = $fileUploadObject->upload($name);
+        if (!strpos($desiredResult, ' ')) {
+            $fileNameNew = $desiredResult;
         } else {
-            $imageErr = "Only .png, .jpg, .jpeg supported";
+            $imageErr = $desiredResult;
             $flag = false;
         }
     }
@@ -182,7 +150,7 @@ if (isset($_POST['submit'])) {
         // sending data to data base
         $hashedPassword = md5($password);
         if (!isset($_FILES['image'])) $fileNameNew = NULL;
-        $result = $adminObject -> addEmployee($role, $name, $email, $hashedPassword, $gender, $mobile, $dob, $address, $city, $state, $fileNameNew);
+        $result = $adminObject->addEmployee($role, $name, $email, $hashedPassword, $gender, $mobile, $dob, $address, $city, $state, $fileNameNew);
         if ($result) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddStatus'] = 'success';
@@ -206,24 +174,24 @@ if (isset($_POST['submit'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
                 <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
-    
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="viewAllEmployees.php">Back</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-   
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <!-- nav ends -->
@@ -318,7 +286,7 @@ if (isset($_POST['submit'])) {
     </div>
 
     <!-- footer here -->
-    <?php include('../common/footer.php');?>
+    <?php include('../common/footer.php'); ?>
     <!-- footer ends -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

@@ -50,7 +50,7 @@ if (isset($_POST['add'])) {
         $flag = false;
     } else {
         // $sql = "SELECT created_at from users where id = '$desiredUserId' and deleted_at is null order by created_at limit 1";
-        $result = $adminObject -> showEmployeeAllDetails($desiredUserId);
+        $result = $adminObject->showEmployeeAllDetails($desiredUserId);
         if (mysqli_num_rows($result) == 1) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $registrationDateTime = $row['created_at'];
@@ -89,7 +89,7 @@ if (isset($_POST['add'])) {
         if ($bondPeriodYears == '') $bondPeriodYears = '0';
         if ($bondPeriodMonths == '') $bondPeriodMonths = '0';
         $bondPeriod = "$bondPeriodYears years $bondPeriodMonths months";
-        $result = $adminObject -> addEmployeeProfessionalDetails($desiredUserId, $salary, $tech, $joiningDate, $noticePeriod, $bondPeriod);
+        $result = $adminObject->addEmployeeProfessionalDetails($desiredUserId, $salary, $tech, $joiningDate, $noticePeriod, $bondPeriod);
         if ($result) {
             echo "<br>Record inserted successfully<br>";
         } else {

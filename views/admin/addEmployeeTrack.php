@@ -104,8 +104,7 @@ if (isset($_POST['submit'])) {
                     }
                     if ($flag) {
                         if ($date == date("Y-m-d")) {
-                            // var_dump($checkOutTime < date("H:i"));
-                            if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                            if ($checkInTime < $checkOutTime && $checkOutTime <= date("H:i")) {
                                 $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, $checkOutTime);
                                 if ($result) {
                                     // echo "Success 2";
