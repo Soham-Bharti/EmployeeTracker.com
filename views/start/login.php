@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../../config/dbConnection.php';
+require_once '../../Classes/Admin.php';
+$adminObject = new Admin();
 $_SESSION['id'] = '';
 $dbConnectObject = new dbConnection();
 $conn = $dbConnectObject->connect();
@@ -42,9 +44,8 @@ if (isset($_POST['submit'])) {
         $hashedPassword = md5(
             $password
         );
-        $sql = "SELECT * from users where email='$email' and password='$hashedPassword' and deleted_at is null";
-        $result = mysqli_query($conn, $sql);
-
+       
+        $result = $adminObject->login($email, $hashedPassword);
         if (mysqli_num_rows($result) === 1) {
             // echo "Login success";
             while ($row = mysqli_fetch_assoc($result)) {
