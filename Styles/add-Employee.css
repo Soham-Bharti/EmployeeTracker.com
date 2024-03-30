@@ -23,3 +23,18 @@ span{
   display: flex;
   justify-content: space-around;
 }
+.btn{
+  width: 30%;
+}
+
+.gradient-custom-2 {
+  background-image: linear-gradient(
+    to right,
+    #2575fc,
+    #4facfe,
+    #00f2fe
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

@@ -14,10 +14,32 @@
     font-size: 20px;
 }
 
+
+span{
+    color: red;
+}
+
 .buttons{
   display: flex;
   justify-content: space-around;
 }
 .btn{
   width: 30%;
+}
+.profile-img {
+    object-fit: cover;
+    width: 20; /* Adjust based on your preference */
+    height: 20; /* Make sure this is equal to the width for a perfect circle */
+}
+
+.gradient-custom-1 {
+  background-image: linear-gradient(
+    to right,
+    #fa709a,
+    #fda085,
+    #ffd54a
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
