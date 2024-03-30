@@ -8,7 +8,12 @@ final class Admin extends dbConnection
         $this->conn = parent::connect();
     }
 
-
+    public function login($email, $hashedPassword)
+    {
+        $sql = "SELECT * from users where email='$email' and password='$hashedPassword' and deleted_at is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
     public function showEmployees()
     {
         $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";

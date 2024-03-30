@@ -134,7 +134,7 @@ final class Project extends dbConnection
         from users u
         left JOIN userprojectdailytask updt
         on u.id = updt.user_id and DATE(updt.created_at) = SUBDATE('$date',1)
-        where u.role = 'employee' and u.deleted_at is null and updt.deleted_at is null and updt.id is null";
+        where u.role = 'employee' and u.deleted_at is null and updt.deleted_at is null and updt.id is null and DATE(u.created_at) <= '$date'";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
