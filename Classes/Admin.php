@@ -31,10 +31,21 @@ final class Admin extends dbConnection
         return false;
     }
 
-    public function addEmployee($role, $name, $email, $hashedPassword, $gender, $mobile, $dob, $address, $city, $state, $fileNameNew)
+    public function addEmployee(...$params)
     {
+        $role = $params['role'];
+        $name = $params['name'];
+        $email = $params['email'];
+        $hashedPassword = $params['hashedPassword'];
+        $gender = $params['gender'];
+        $mobile = $params['mobile'];
+        $dob = $params['dob'];
+        $address = $params['address'];
+        $city = $params['city'];
+        $state = $params['state'];
+        $fileNewName = $params['fileNewName'];
         $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
-        values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNameNew')";
+        values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNewName')";
         if (mysqli_query($this->conn, $sql)) {
             mysqli_close($this->conn);
             return true;
@@ -96,10 +107,21 @@ final class Admin extends dbConnection
         return $result;
     }
 
-    public function updateEmployeeBasicDetails($name, $email, $mobile, $address, $gender, $dob, $city, $state, $fileNameNew, $id)
+    public function updateEmployeeBasicDetails(...$params)
     {
+        $name = $params['name'];
+        $email = $params['email'];
+        $mobile = $params['mobile'];
+        $address = $params['address'];
+        $gender = $params['gender'];
+        $dob = $params['dob'];
+        $city = $params['city'];
+        $state = $params['state'];
+        $fileNewName = $params['fileNewName'];
+        $id = $params['id'];
+
         $sql = "UPDATE users
-            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', profile_url = '$fileNameNew', updated_at = now()
+            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', profile_url = '$fileNewName', updated_at = now()
             where id = '$id'
             ";
         $result = mysqli_query($this->conn, $sql);
@@ -226,14 +248,13 @@ final class Admin extends dbConnection
     }
 
 
-
     public function totalEmployeesWithNoProjects()
     {
-        $sql = "SELECT DISTINCT u.id, u.name 
+        $sql = "SELECT DISTINCT u.id, u.name
         FROM users u 
         left JOIN employeesprojects ep
-        ON u.id = ep.user_id and ep.deleted_at is null
-        where u.deleted_at is null and role = 'employee' and ep.id is null";
+        ON u.id = ep.user_id 
+        where u.deleted_at is null and u.role = 'employee' and ep.id is null and ep.deleted_at is null";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
