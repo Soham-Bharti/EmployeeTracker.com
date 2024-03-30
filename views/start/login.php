@@ -77,8 +77,9 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | Login</title>
-    <link rel="stylesheet" href="../../Styles/login.css">
+    <title>Welcome Back | Login</title>
+    <?php include('../common/favicon.php');?>
+    <link rel="stylesheet" href="../../Styles/log-in.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -105,7 +106,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">Welcome back</h2>
+    <h2 class="text-center mt-2 gradient-custom-2">Welcome back</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <span><?php echo $invalidCredentialsErr ?></span>
