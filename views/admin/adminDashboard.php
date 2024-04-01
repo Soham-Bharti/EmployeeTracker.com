@@ -37,30 +37,22 @@ $date = date('Y-m-d');
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='fw-bold text-success'>EmployeeTracker.com</span>
-            </a>
-
-            <ul class="navbar-nav mb-2 me-auto mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="../start/login.php">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="viewAllEmployees.php">Employees</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="viewAllProjects.php">Projects</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between">
+        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='fw-bold text-success'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="viewAllEmployees.php">Employees</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="viewAllProjects.php">Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../start/login.php">Logout</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-1'>admin</span> dashboard</h2>
@@ -122,7 +114,7 @@ $date = date('Y-m-d');
         <div class="my-5 d-flex justify-content-evenly" id="updatedContent">
             <div>
                 <div class="card" style="width: 17rem;">
-                    <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
+                    <img class="card-img-top p-3 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
                     <div class="card-body">
                         <div class='d-flex justify-content-around align-items-center p-0 m-0'>
                             <p class="card-title fs-6">Attendance on <br />(<span id='todayAttendanceDate'><?php echo $date ?></span>): </p>
@@ -135,7 +127,10 @@ $date = date('Y-m-d');
                             $result = $adminObject->totalCheckedInUsersOnDate($date);
                             $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
                             ?>
-                            <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
+                            <p id='d-none' class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
+                            <p id='d-block' class='d-none fw-bold display-6'>
+                                <span id='totalCheckedInUsersTodayCountPresent'></span>/<span id='totalEmployeesCountPresent'></span>
+                            </p>
                         </div>
                         <?php
                         $absentEmployees = [];
@@ -154,11 +149,13 @@ $date = date('Y-m-d');
                                     </button>
                                 </h2>
                                 <div id="flush-collapseAbsentees" class="accordion-collapse collapse" data-bs-parent="#accordionAbsentees">
-                                    <div class="accordion-body">
+                                    <div id='absentEmployeesPresent' class="accordion-body">
+
                                         <?php
                                         foreach ($absentEmployees as $name) {
-                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                                } ?>
+                                        ?>
+                                            <p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                                    } ?>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +180,7 @@ $date = date('Y-m-d');
                                 }
                             }
                             ?>
-                            <p class='fw-bold display-6'><?php echo sizeof($showEmployeesWithLessWorkingHoursYesterdayArray); ?></p>
+                            <p id='showEmployeesWithLessWorkingHoursYesterdayArrayCountPast' class='fw-bold display-6'><?php echo sizeof($showEmployeesWithLessWorkingHoursYesterdayArray); ?></p>
                         </div>
                         <div class="accordion accordion-flush" id="showEmployeesWithLessWorkingHoursYesterday">
                             <div class="accordion-item">
@@ -193,7 +190,7 @@ $date = date('Y-m-d');
                                     </button>
                                 </h2>
                                 <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
-                                    <div class="accordion-body">
+                                    <div id='showEmployeesWithLessWorkingHoursYesterdayArrayPast' class="accordion-body">
                                         <?php
                                         foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name => $total_seconds) {
                                             $hours = floor($total_seconds / 3600);
@@ -213,7 +210,7 @@ $date = date('Y-m-d');
             </div>
             <div>
                 <div class="card" style="width: 17rem;">
-                    <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
+                    <img class="card-img-top p-2 w-75 m-auto" src="../../Images/past-calendar.png" alt="Card image cap">
                     <div class="card-body">
                         <div class='d-flex justify-content-around align-items-center p-0 m-0'>
                             <p class="card-title fs-6">Attendance on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
@@ -228,7 +225,10 @@ $date = date('Y-m-d');
                             $result = $adminObject->totalCheckedInUsersOnDate($yesterdayDate);
                             $totalCheckedInUsersYesterdayCount  = mysqli_num_rows($result);
                             ?>
-                            <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersYesterdayCount >= 0.75 * $totalEmployeesYesterdayCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersYesterdayCount"; ?></span>/<?php echo "$totalEmployeesYesterdayCount"; ?></p>
+                            <p id='d-none1' class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersYesterdayCount >= 0.75 * $totalEmployeesYesterdayCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersYesterdayCount"; ?></span>/<?php echo "$totalEmployeesYesterdayCount"; ?></p>
+                            <p id='d-block1' class='d-none fw-bold display-6'>
+                                <span id='totalCheckedInUsersYesterdayCountPast'></span>/<span id='totalEmployeesYesterdayCountPast'></span>
+                            </p>
                         </div>
                         <?php
                         $absentEmployees = [];
@@ -247,7 +247,7 @@ $date = date('Y-m-d');
                                     </button>
                                 </h2>
                                 <div id="flush-showEmployeesYesterdayAttendance" class="accordion-collapse collapse" data-bs-parent="#showEmployeesYesterdayAttendance">
-                                    <div class="accordion-body">
+                                    <div id='absentEmployeesPast' class="accordion-body">
                                         <?php
                                         foreach ($absentEmployees as $name) {
                                         ?><p class='m-0 p-0'><?php echo $name ?></p><?php
@@ -274,7 +274,7 @@ $date = date('Y-m-d');
                                 }
                             }
                             ?>
-                            <p class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
+                            <p id='employeesWithNoPMSYesterdayArrayCountPast' class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
                         </div>
                         <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
                             <div class="accordion-item">
@@ -284,7 +284,7 @@ $date = date('Y-m-d');
                                     </button>
                                 </h2>
                                 <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
-                                    <div class="accordion-body">
+                                    <div id='employeesWithNoPMSYesterdayArrayPast' class="accordion-body">
                                         <?php
                                         foreach ($employeesWithNoPMSYesterdayArray as $name) {
                                         ?><p class='m-0 p-0'><?php echo $name ?></p><?php
@@ -317,9 +317,6 @@ $date = date('Y-m-d');
                     <a href="viewAllProjects.php" class="btn btn-primary w-100">Go to Projects</a>
                 </div>
             </div>
-            <!-- fws -->
-
-            <!-- more -->
             <div class="card" style="width: 17rem;">
                 <img class="card-img-top w-75 m-auto" src="../../Images/management.gif" alt="Card image cap">
                 <div class="card-body">
@@ -348,7 +345,6 @@ $date = date('Y-m-d');
                             <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <?php
-                                    // print_r($totalEmployeesWithNoProjectsArray);
                                     if (!empty($totalEmployeesWithNoProjectsArray)) {
                                         foreach ($totalEmployeesWithNoProjectsArray as $name) {
                                     ?><p class='m-0 p-0'><?php echo $name ?></p><?php
@@ -380,14 +376,43 @@ $date = date('Y-m-d');
                 // alert(selectedDate);
                 if (selectedDate != '') {
                     $.ajax({
-                        url: 'dynamicContent.php',
+                        url: 'ajaxContent.php',
                         type: 'POST',
                         data: {
                             newDate: selectedDate
                         },
+                        dataType: "JSON",
                         success: function(response) {
-                            $('#updatedContent').html(response);
+                            // $('#updatedContent').html(response);
                             // alert(response);
+                            $('#d-none').css("display", "none");
+                            $('#d-block').removeClass("d-none");
+                            $('#d-none1').css("display", "none");
+                            $('#d-block1').removeClass("d-none");
+                            $('#totalEmployeesCountPresent').text(response.totalEmployeesCountPresent);
+                            $('#totalCheckedInUsersTodayCountPresent').text(response.totalCheckedInUsersTodayCountPresent);
+                            if (response.totalCheckedInUsersTodayCountPresent >= 0.75 * response.totalEmployeesCountPresent) {
+                                $('#totalCheckedInUsersTodayCountPresent').removeClass('text-danger');
+                                $('#totalCheckedInUsersTodayCountPresent').addClass('text-success');
+                            } else {
+                                $('#totalCheckedInUsersTodayCountPresent').removeClass('text-success');
+                                $('#totalCheckedInUsersTodayCountPresent').addClass('text-danger');
+                            }
+                            $('#absentEmployeesPresent').text(response.absentEmployeesPresent);
+                            $('#showEmployeesWithLessWorkingHoursYesterdayArrayCountPast').text(response.showEmployeesWithLessWorkingHoursYesterdayArrayCountPast);
+                            $('#showEmployeesWithLessWorkingHoursYesterdayArrayPast').text(response.showEmployeesWithLessWorkingHoursYesterdayArrayPast);
+                            $('#totalEmployeesYesterdayCountPast').text(response.totalEmployeesYesterdayCountPast);
+                            $('#totalCheckedInUsersYesterdayCountPast').text(response.totalCheckedInUsersYesterdayCountPast);
+                            if (response.totalCheckedInUsersYesterdayCountPast >= 0.75 * response.totalEmployeesYesterdayCountPast) {
+                                $('#totalCheckedInUsersYesterdayCountPast').removeClass('text-danger');
+                                $('#totalCheckedInUsersYesterdayCountPast').addClass('text-success');
+                            } else {
+                                $('#totalCheckedInUsersYesterdayCountPast').removeClass('text-success');
+                                $('#totalCheckedInUsersYesterdayCountPast').addClass('text-danger');
+                            }
+                            $('#absentEmployeesPast').text(response.absentEmployeesPast);
+                            $('#employeesWithNoPMSYesterdayArrayCountPast').text(response.employeesWithNoPMSYesterdayArrayCountPast);
+                            $('#employeesWithNoPMSYesterdayArrayPast').text(response.employeesWithNoPMSYesterdayArrayPast);
                         }
                     });
                 }
