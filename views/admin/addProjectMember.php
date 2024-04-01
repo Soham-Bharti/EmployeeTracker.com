@@ -67,7 +67,7 @@ if (isset($_POST['add'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Memeber/s</title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/add-ProjctMember.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -76,28 +76,20 @@ if (isset($_POST['add'])) {
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='fw-bold text-success'>EmployeeTracker.com</span>
-            </a>
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="viewAllProjects.php">Back</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center justify-content-between px-5">
+        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='fw-bold text-success'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="viewAllProjects.php">Back</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <?php
-    $result = $projectObject -> showProjectDetails($desiredProjectId);
+    $result = $projectObject->showProjectDetails($desiredProjectId);
     if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             $title = $row['title'];
@@ -124,7 +116,7 @@ if (isset($_POST['add'])) {
                     <label class="col-form-label" for='memberId'>Select Member/s <span class="text-danger">* <?php echo $selectMemberErr ?></span></label>
                     <select class="form-control selectpicker" name="memberId[]" id="memberId" multiple data-live-search="true" placeholder='choose'>
                         <?php
-                       $result = $projectObject -> showUnAddedProjectMembers($desiredProjectId);
+                        $result = $projectObject->showUnAddedProjectMembers($desiredProjectId);
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                         ?>

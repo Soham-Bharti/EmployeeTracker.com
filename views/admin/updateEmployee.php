@@ -185,23 +185,16 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='fw-bold text-success'>EmployeeTracker.com</span>
-            </a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="viewEmployeeAllDetails.php?id=<?php echo $desiredUserId ?>">Back</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center justify-content-between px-5">
+        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='fw-bold text-success'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="viewEmployeeAllDetails.php?id=<?php echo $desiredUserId ?>">Back</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-2"><span class="gradient-custom-2">Update</span> Employees' <span>Personal</span> Details</h2>

@@ -19,7 +19,7 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMS | <?php echo $_SESSION['userName']; ?> </title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/view-pms.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -27,32 +27,22 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-
-            <a href="../start/home.php" class="svg text-decoration-none d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='text-success fw-bold'>EmployeeTracker.com</span>
-            </a>
-
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="userDashboard.php">Back</a>
-                </li>
-                <li class="nav-item">
-                    <a href="viewProjects.php?id=<?php echo $desiredUserId ?>" class="nav-link">My Projects</a>
-                </li>
-                <li class="nav-item">
-                    <a href="addProjectDailyTask.php?id=<?php echo $desiredUserId ?>" class="nav-link">Add Daily Task</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center justify-content-between px-5">
+        <a href="../start/home.php" class="svg text-decoration-none d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='text-success fw-bold'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a href="addProjectDailyTask.php?id=<?php echo $desiredUserId ?>" class="nav-link">Add Daily Task</a>
+            </li>
+            <li class="nav-item">
+                <a href="viewProjects.php?id=<?php echo $desiredUserId ?>" class="nav-link">My Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="userDashboard.php">Back</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to your <span class='gradient-custom-2'>PMS</span> dashboard</h2>
@@ -74,7 +64,8 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['AddDailyTaskStatus'] = ''; ?>
+        <?php }
+        $_SESSION['AddDailyTaskStatus'] = ''; ?>
         <!-- toast ends -->
         <h2 class="text-center mt-5">Showing your <span class='gradient-custom-1'>LAST 10</span> activity</h2>
         <div class="mt-3">
@@ -87,13 +78,13 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
                     <th>Summary</th>
                 </tr>
                 <?php
-                $result = $projectObject -> showPMSbyUserId($desiredUserId);
+                $result = $projectObject->showPMSbyUserId($desiredUserId);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        if( $seialNumber == 11) break;
+                        if ($seialNumber == 11) break;
                         $time = strtotime($row["created_dateTime"]);
-                        ?>
+                ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
                             <td class='fw-bold w-25'>

@@ -31,7 +31,7 @@ if (isset($_GET['delete_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Projects</title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/view-Projects.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -40,27 +40,19 @@ if (isset($_GET['delete_id'])) {
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='fw-bold text-success'>EmployeeTracker.com</span>
-            </a>
-
-            <ul class="navbar-nav mb-2 me-auto mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="addProject.php">Add Project</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center justify-content-between px-5">
+        <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='fw-bold text-success'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="adminDashboard.php">Back</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="addProject.php">Add Project</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <div class="container mt-5 px-5">
@@ -140,7 +132,7 @@ if (isset($_GET['delete_id'])) {
                         <tr>
                             <td><?php echo $row["id"] ?></td>
                             <td class='w-25 fw-bold'><?php echo $row["title"] ?></td>
-                            <td class='w-25'><?php echo $row["description"] == '' ? 'N/A' : ( strlen($row["description"]) > 100 ? substr($row["description"], 0, 100)."..." : $row["description"]) ?></td>
+                            <td class='w-25'><?php echo $row["description"] == '' ? 'N/A' : (strlen($row["description"]) > 100 ? substr($row["description"], 0, 100) . "..." : $row["description"]) ?></td>
                             <td class='w-25'><?php echo date('d M Y - H:ia', $time); ?></td>
                             <td>
                                 <a href="updateProjectDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">Update</a>
@@ -153,9 +145,9 @@ if (isset($_GET['delete_id'])) {
                             </td>
                             <td>
                                 <!-- <a href="deleteProject.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Remove</a> -->
-                         
+
                                 <a onclick="return confirm('Are you sure you want to delete this project?')" href="?delete_id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Remove</a>
-                    
+
                             </td>
                         </tr>
                 <?php

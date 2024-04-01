@@ -29,7 +29,7 @@ if (isset($_POST['check-out-submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | <?php echo $_SESSION['userName']; ?> </title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/user-Dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -37,38 +37,28 @@ if (isset($_POST['check-out-submit'])) {
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-
-            <a href="../start/home.php" class="svg text-decoration-none d-flex align-items-center">
-                <img src="../../Images/mainIcon.gif" alt='svg here'>
-                <span class='text-success fw-bold'>EmployeeTracker.com</span>
-            </a>
-
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="../start/login.php">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="changePassword.php">Change Password</a>
-                </li>
-                <li class="nav-item">
-                    <a href="viewTrack.php?id=<?php echo $desiredUserId ?>" class="nav-link">Working Track</a>
-                </li>
-                <li class="nav-item">
-                    <a href="viewDetails.php?id=<?php echo $desiredUserId ?>" class="nav-link">View Details</a>
-                </li>
-                <li class="nav-item">
-                    <a href="pms.php?id=<?php echo $desiredUserId ?>" class="nav-link">PMS</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-        </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex align-items-center justify-content-between px-5">
+        <a href="../start/home.php" class="svg text-decoration-none d-flex align-items-center">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
+            <span class='text-success fw-bold'>EmployeeTracker.com</span>
+        </a>
+        <ul class="navbar-nav mb-lg-0">
+            <li class="nav-item">
+                <a href="pms.php?id=<?php echo $desiredUserId ?>" class="nav-link">PMS</a>
+            </li>
+            <li class="nav-item">
+                <a href="viewTrack.php?id=<?php echo $desiredUserId ?>" class="nav-link">Working Track</a>
+            </li>
+            <li class="nav-item">
+                <a href="viewDetails.php?id=<?php echo $desiredUserId ?>" class="nav-link">View Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="changePassword.php">Change Password</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../start/login.php">Logout</a>
+            </li>
+        </ul>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-2'>User</span> dashboard</h2>
@@ -189,11 +179,11 @@ if (isset($_POST['check-out-submit'])) {
                     <th>Check Out Time</th>
                 </tr>
                 <?php
-                $result = $userObject -> showTrackDetails(false);
+                $result = $userObject->showTrackDetails(false);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        if($seialNumber == 11) break; // as we only need 10 to show
+                        if ($seialNumber == 11) break; // as we only need 10 to show
                         $flag = false;
                         $checkOut = $row["check_out_time"];
                 ?>

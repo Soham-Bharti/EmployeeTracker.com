@@ -37,7 +37,7 @@ $date = date('Y-m-d');
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between px-5">
         <a href="../start/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
             <img src="../../Images/mainIcon.gif" alt='svg here'>
             <span class='fw-bold text-success'>EmployeeTracker.com</span>
