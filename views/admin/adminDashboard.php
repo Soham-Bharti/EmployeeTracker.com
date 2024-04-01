@@ -7,7 +7,14 @@ $projectObject = new Project();
 $adminObject = new Admin();
 
 // print_r($_SESSION);
-if ($_SESSION['role'] !== 'admin') {
+$desiredUserId = $_SESSION['id'];
+$result = $adminObject->showEmployeeAllDetails($desiredUserId);
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $role =  $row["role"];
+}
+
+if ($role !== 'admin') {
     header('Location: ../start/login.php');
 }
 $date = date('Y-m-d');
@@ -21,7 +28,7 @@ $date = date('Y-m-d');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/admin-Dashboard.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -112,127 +119,178 @@ $date = date('Y-m-d');
                 <input type="date" class='p-2 mx-2 border border-info focus-ring rounded-2' name="inputDate" id='inputDate' onchange="changeAnalytics(this.value)" min='2024-03-16' max="<?= date('Y-m-d'); ?>" value='<?php echo $date; ?>'>
             </div>
         </div>
-        <!-- unvsdiu -->
         <div class="my-5 d-flex justify-content-evenly" id="updatedContent">
-            <div class="card" style="width: 17rem;">
-                <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
-                <div class="card-body">
-                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Attendance on <br/>(<span id='todayAttendanceDate'><?php echo $date ?></span>): </p>
-                        <?php
-                        $result = $adminObject->totalEmployeesCount($date);
-                        if (mysqli_num_rows($result) > 0) {
-                            $row = mysqli_fetch_assoc($result);
-                            $totalEmployeesCount =  $row['totalEmployeesCount'];
-                        }
-                        $result = $adminObject->totalCheckedInUsersOnDate($date);
-                        $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
-                        ?>
-                        <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
-                    </div>
-                    <?php
-                    $absentEmployees = [];
-                    $result = $adminObject->showAbsentEmployeesOnDate($date);
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            array_push($absentEmployees,  $row['name']);
-                        }
-                    }
-                    ?>
-                    <div class="accordion accordion-flush" id="accordionAbsentees">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbsentees" aria-expanded="false" aria-controls="flush-collapseAbsentees">
-                                    Show Absentees
-                                </button>
-                            </h2>
-                            <div id="flush-collapseAbsentees" class="accordion-collapse collapse" data-bs-parent="#accordionAbsentees">
-                                <div class="accordion-body">
-                                    <?php
-                                    // print_r($totalEmployeesWithNoProjectsArray);
-                                    foreach ($absentEmployees as $name) {
-                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                            } ?>
-                                </div>
-                            </div>
+            <div>
+                <div class="card" style="width: 17rem;">
+                    <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
+                    <div class="card-body">
+                        <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                            <p class="card-title fs-6">Attendance on <br />(<span id='todayAttendanceDate'><?php echo $date ?></span>): </p>
+                            <?php
+                            $result = $adminObject->totalEmployeesCount($date);
+                            if (mysqli_num_rows($result) > 0) {
+                                $row = mysqli_fetch_assoc($result);
+                                $totalEmployeesCount =  $row['totalEmployeesCount'];
+                            }
+                            $result = $adminObject->totalCheckedInUsersOnDate($date);
+                            $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
+                            ?>
+                            <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="width: 17rem;">
-                <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
-                <div class="card-body">
-                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Work Time < 8.45Hrs. on <br/>(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>): </p>
                         <?php
-                        $yesterdayDate = date($date, strtotime("-1 days"));
-                        $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday($date);
+                        $absentEmployees = [];
+                        $result = $adminObject->showAbsentEmployeesOnDate($date);
                         if (mysqli_num_rows($result) > 0) {
-                            // $showEmployeesWithLessWorkingHoursYesterdayArray = [];
                             while ($row = mysqli_fetch_assoc($result)) {
-                                // array_push($showEmployeesWithLessWorkingHoursYesterdayArray,  $row['name']);
-                                $showEmployeesWithLessWorkingHoursYesterdayArray[$row['name']] = $row['total_seconds'];
+                                array_push($absentEmployees,  $row['name']);
                             }
                         }
                         ?>
-                        <p class='fw-bold display-6'><?php echo sizeof($showEmployeesWithLessWorkingHoursYesterdayArray); ?></p>
-                    </div>
-                    <div class="accordion accordion-flush" id="showEmployeesWithLessWorkingHoursYesterday">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesWithLessWorkingHoursYesterday" aria-expanded="false" aria-controls="flush-showEmployeesWithLessWorkingHoursYesterday">
-                                    Show List
-                                </button>
-                            </h2>
-                            <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
-                                <div class="accordion-body">
-                                    <?php
-                                    foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name => $total_seconds) {
-                                        $hours = floor($total_seconds / 3600);
-                                        $minutes = floor(($total_seconds % 3600) / 60);
-                                        $seconds = $total_seconds % 60;
-                                        $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-                                    ?><p><?php echo explode(' ', $name)[0] . " - $formatted_time" ?></p>
-                                        <hr><?php
-                                        }
-                                            ?>
+                        <div class="accordion accordion-flush" id="accordionAbsentees">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbsentees" aria-expanded="false" aria-controls="flush-collapseAbsentees">
+                                        Show Absentees
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseAbsentees" class="accordion-collapse collapse" data-bs-parent="#accordionAbsentees">
+                                    <div class="accordion-body">
+                                        <?php
+                                        foreach ($absentEmployees as $name) {
+                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                                } ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card" style="width: 17rem;">
-                <img class="card-img-top w-75 m-auto" src="../../Images/pms.png" alt="Card image cap">
-                <div class="card-body">
-                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Missed PMS on <br/>(<span id='yesterdayPMSDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date)));?></span>): </p>
+            <div>
+                <div class="card" style="width: 17rem;">
+                    <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
+                    <div class="card-body">
+                        <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                            <p class="card-title fs-6">Work Time
+                                < 8.45Hrs. on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
+                            </p>
+                            <?php
+                            $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday($date);
+                            $showEmployeesWithLessWorkingHoursYesterdayArray = [];
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $showEmployeesWithLessWorkingHoursYesterdayArray[$row['name']] = $row['total_seconds'];
+                                }
+                            }
+                            ?>
+                            <p class='fw-bold display-6'><?php echo sizeof($showEmployeesWithLessWorkingHoursYesterdayArray); ?></p>
+                        </div>
+                        <div class="accordion accordion-flush" id="showEmployeesWithLessWorkingHoursYesterday">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesWithLessWorkingHoursYesterday" aria-expanded="false" aria-controls="flush-showEmployeesWithLessWorkingHoursYesterday">
+                                        Show List
+                                    </button>
+                                </h2>
+                                <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
+                                    <div class="accordion-body">
+                                        <?php
+                                        foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name => $total_seconds) {
+                                            $hours = floor($total_seconds / 3600);
+                                            $minutes = floor(($total_seconds % 3600) / 60);
+                                            $seconds = $total_seconds % 60;
+                                            $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+                                        ?><p><?php echo explode(' ', $name)[0] . " - $formatted_time" ?></p>
+                                            <hr><?php
+                                            }
+                                                ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card" style="width: 17rem;">
+                    <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
+                    <div class="card-body">
+                        <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                            <p class="card-title fs-6">Attendance on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
+                            </p>
+                            <?php
+                            $yesterdayDate = date('Y-m-d', strtotime("-1 days"));
+                            $result = $adminObject->totalEmployeesCount($yesterdayDate);
+                            if (mysqli_num_rows($result) > 0) {
+                                $row = mysqli_fetch_assoc($result);
+                                $totalEmployeesYesterdayCount =  $row['totalEmployeesCount'];
+                            }
+                            $result = $adminObject->totalCheckedInUsersOnDate($yesterdayDate);
+                            $totalCheckedInUsersYesterdayCount  = mysqli_num_rows($result);
+                            ?>
+                            <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersYesterdayCount >= 0.75 * $totalEmployeesYesterdayCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersYesterdayCount"; ?></span>/<?php echo "$totalEmployeesYesterdayCount"; ?></p>
+                        </div>
                         <?php
-                        $yesterdayDate = date($date, strtotime("-1 days"));
-                        $result = $projectObject->employeesWithNoPMSYesterday($date);
+                        $absentEmployees = [];
+                        $result = $adminObject->showAbsentEmployeesOnDate($yesterdayDate);
                         if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                array_push($absentEmployees,  $row['name']);
+                            }
+                        }
+                        ?>
+                        <div class="accordion accordion-flush" id="showEmployeesYesterdayAttendance">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesYesterdayAttendance" aria-expanded="false" aria-controls="flush-showEmployeesYesterdayAttendance">
+                                        Show Absentees
+                                    </button>
+                                </h2>
+                                <div id="flush-showEmployeesYesterdayAttendance" class="accordion-collapse collapse" data-bs-parent="#showEmployeesYesterdayAttendance">
+                                    <div class="accordion-body">
+                                        <?php
+                                        foreach ($absentEmployees as $name) {
+                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                                } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card" style="width: 17rem;">
+                    <img class="card-img-top w-75 m-auto" src="../../Images/pms.png" alt="Card image cap">
+                    <div class="card-body">
+                        <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                            <p class="card-title fs-6">Missed PMS on <br />(<span id='yesterdayPMSDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>): </p>
+                            <?php
+                            $result = $projectObject->employeesWithNoPMSYesterday($date);
                             $employeesWithNoPMSYesterdayArray = [];
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                array_push($employeesWithNoPMSYesterdayArray,  $row['name']);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    array_push($employeesWithNoPMSYesterdayArray,  $row['name']);
+                                }
                             }
-                        }
-                        ?>
-                        <p class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
-                    </div>
-                    <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
-                                    Show Members
-                                </button>
-                            </h2>
-                            <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
-                                <div class="accordion-body">
-                                    <?php
-                                    foreach ($employeesWithNoPMSYesterdayArray as $name) {
-                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                            }
-                                                                                ?>
+                            ?>
+                            <p class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
+                        </div>
+                        <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
+                                        Show Members
+                                    </button>
+                                </h2>
+                                <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
+                                    <div class="accordion-body">
+                                        <?php
+                                        foreach ($employeesWithNoPMSYesterdayArray as $name) {
+                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                                }
+                                                                                    ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -269,8 +327,8 @@ $date = date('Y-m-d');
                         <p class="card-title fs-6">Idle Employee/s: </p>
                         <?php
                         $result = $adminObject->totalEmployeesWithNoProjects();
+                        $totalEmployeesWithNoProjectsCount = 0;
                         if (mysqli_num_rows($result) > 0) {
-                            $totalEmployeesWithNoProjectsCount = 0;
                             $totalEmployeesWithNoProjectsArray = [];
                             while ($row = mysqli_fetch_assoc($result)) {
                                 array_push($totalEmployeesWithNoProjectsArray,  $row['name']);
@@ -291,9 +349,11 @@ $date = date('Y-m-d');
                                 <div class="accordion-body">
                                     <?php
                                     // print_r($totalEmployeesWithNoProjectsArray);
-                                    foreach ($totalEmployeesWithNoProjectsArray as $name) {
+                                    if (!empty($totalEmployeesWithNoProjectsArray)) {
+                                        foreach ($totalEmployeesWithNoProjectsArray as $name) {
                                     ?><p class='m-0 p-0'><?php echo $name ?></p><?php
                                                                             }
+                                                                        }
                                                                                 ?>
                                 </div>
                             </div>

@@ -10,6 +10,7 @@ if ($_SESSION['role'] !== 'admin') {
 }
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
+else header('Location: ../start/login.php');
 
 ?>
 
@@ -20,7 +21,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emplpoyee Track | Admin</title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/track-Employee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
