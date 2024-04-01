@@ -66,46 +66,6 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
                 ?>
             </div>
         </div>
-        <!-- toast after successful change of password -->
-        <?php if ($_SESSION['userChangePasswordStatus'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">Password changed successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['userChangePasswordStatus'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after successful check-in -->
-        <?php if (isset($_SESSION['checkInMessage']) && $_SESSION['checkInMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">You are Checked-in successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkInMessage'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after successful check-in -->
-        <?php if (isset($_SESSION['checkOutMessage']) && $_SESSION['checkOutMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-warning text-white ">
-                    <strong class="me-auto">You are Checked-out successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkOutMessage'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after fail check-in -->
-        <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-danger text-white ">
-                    <strong class="me-auto">Check-in limit reached!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkInLimitMessage'] = ''; ?>
-        <!-- toast ends -->
         <!-- toast after successfully adding daily task -->
         <?php if (isset($_SESSION['AddDailyTaskStatus']) && $_SESSION['AddDailyTaskStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
@@ -136,7 +96,7 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
                         ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
-                            <td class='fw-bold'>
+                            <td class='fw-bold w-25'>
                                 <?php
                                 echo $row['projectTitle'];
                                 ?>
@@ -146,17 +106,13 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
                                 echo $row['projectId'];
                                 ?>
                             </td>
-                            <td>
+                            <td class='w-25'>
                                 <?php
                                 echo date('D - d M Y - h:ia', $time);
                                 ?>
                             </td>
-                            
-                            <td class='w-50'>
-                                <?php
-                               echo $row['summary'];
-                                ?>
-                            </td>
+                            <td class='w-100'><textarea disabled rows='4' cols="100" class="w-100 p-2 border-0 pms-textarea"><?php echo $row["summary"] ?></textarea></td>
+
                         </tr>
                     <?php
                     }

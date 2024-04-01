@@ -7,7 +7,7 @@ if ($_SESSION['role'] !== 'emp') {
     header('Location: ../start/login.php');
 }
 
-if (isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $desiredUserId = $_GET['id'];
 }
 
@@ -17,24 +17,27 @@ $Err = "";
 $flag = true;
 
 if (isset($_POST['submit'])) {
-    // print_r($_POST);
-    $projectId_Array = $_POST['projectId'];
-    $description_Array = $_POST['description'];
-    $desiredUserId = $_POST['desiredUserId'];
-    $desiredArray = array_combine($projectId_Array, $description_Array);
-    
-
-    foreach ($description_Array as $value) {
-        if (empty($value)) {
-            $flag = false;
-            $Err = "* An empty description was found *";
-            break;
+    if (empty($_POST['projectId'])) {
+        $Err = "Oops! No project found.";
+        $flag = false;
+    } else {
+        $projectId_Array = $_POST['projectId'];
+        $description_Array = $_POST['description'];
+        $desiredUserId = $_POST['desiredUserId'];
+        foreach ($description_Array as $value) {
+            if (!isset($value) || $value == '') {
+                $flag = false;
+                $Err = "* An empty description was found *";
+                break;
+            }
         }
     }
 
     if ($flag) {
-        foreach ($desiredArray as $projectId => $description) {
-            $result = $projectObject->addProjectDailyTask($desiredUserId, $projectId, $description);
+        $index = 0;
+        foreach ($projectId_Array as $pId) {
+            $description = $description_Array[$index++];
+            $result = $projectObject->addProjectDailyTask($desiredUserId, $pId, $description);
             if ($result) {
                 // echo "<br>New record inserted successfully<br>";
                 $_SESSION['AddDailyTaskStatus'] = 'success';
@@ -55,7 +58,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Daily Task</title>
-    <?php include('../common/favicon.php');?>
+    <?php include('../common/favicon.php'); ?>
     <link rel="stylesheet" href="../../Styles/add-ProjectHours.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -83,7 +86,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Add <span class='gradient-custom-2'>Daily</span> Task</h2>
+    <h2 class="text-center mt-3">Add <span class='gradient-custom-2'>Daily</span> <span class='gradient-custom-2'>Task</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class='text-danger text-center fw-bold h4'><?php echo $Err ?></div>
@@ -114,7 +117,7 @@ if (isset($_POST['submit'])) {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description <span class='text-danger'>*</label>
-                            <input type="text" class="form-control" name="description[]" placeholder="Fixed ***** bug...">
+                            <textarea class="form-control" name="description[]" placeholder="Fixed ***** bug..." rows="3"></textarea>
                         </div>
                     </div>
                     <span>
@@ -157,7 +160,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description <span class='text-danger'>*</label>
-                        <input type="text" class="form-control" name="description[]" placeholder="Fixed ***** bug...">
+                        <textarea class="form-control" name="description[]" placeholder="Fixed ***** bug..." rows="3"></textarea>
                     </div>
                 </div>
                 <span>
