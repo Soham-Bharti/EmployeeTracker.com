@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../../config/dbConnection.php';
-$_SESSION['id'] = '';
+session_destroy(); 
 $conn = new dbConnection();
 $conn->connect();
 

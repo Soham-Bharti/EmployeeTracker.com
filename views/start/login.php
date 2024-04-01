@@ -3,7 +3,6 @@ session_start();
 require_once '../../config/dbConnection.php';
 require_once '../../Classes/Admin.php';
 $adminObject = new Admin();
-$_SESSION['id'] = '';
 $dbConnectObject = new dbConnection();
 $conn = $dbConnectObject->connect();
 // var_dump($conn);
