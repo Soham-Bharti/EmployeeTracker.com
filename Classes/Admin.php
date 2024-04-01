@@ -59,6 +59,7 @@ final class Admin extends dbConnection
         $sql = "SELECT 
         COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds,
         u.id,
+        u.role,
         u.name, 
         u.mobile, 
         u.date_of_birth, 
@@ -88,13 +89,6 @@ final class Admin extends dbConnection
     ORDER BY u.created_at;
     ";
 
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function isEmployeeAllDetailsAvalable($desiredUserId)
-    {
-        $sql = "SELECT * from employeeDetails where user_id = '$desiredUserId' and deleted_at is null;";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
@@ -285,7 +279,8 @@ final class Admin extends dbConnection
         from users u
         left JOIN employeetrackingdetails e
         on u.id = e.user_id and DATE(e.check_in_time) = SUBDATE('$date',1)
-        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null and DATE(u.created_at) <= '$date'
+        left join employeetrackingdetails etd on etd.user_id = u.id and DATE(etd.check_in_time) = SUBDATE('$date',1)
+        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null and DATE(u.created_at) <= SUBDATE('$date',1) and etd.id is not null and etd.deleted_at is null
         GROUP BY u.id, e.user_id
         HAVING total_seconds < 31500";
         $result = mysqli_query($this->conn, $sql);
