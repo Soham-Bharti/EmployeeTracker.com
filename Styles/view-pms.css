@@ -41,3 +41,10 @@ tr:nth-child(even) {
   background-clip: text;
   color: transparent;
 }
+
+td .pms-textarea {
+  resize: none !important;
+  scrollbar-width: thin;
+  background: transparent;
+  /* scrollbar-color: #a5dda6 #f1f1f1; */
+}
