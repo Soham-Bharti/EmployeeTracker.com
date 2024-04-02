@@ -3,9 +3,9 @@ session_start();
 require_once '../../config/dbConnection.php';
 require_once '../../Classes/Admin.php';
 $adminObject = new Admin();
-$dbConnectObject = new dbConnection();
-$conn = $dbConnectObject->connect();
-// var_dump($conn);
+if (isset($_SESSION['isLogout']) && $_SESSION['isLogout']) {
+    session_destroy();
+}
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -16,7 +16,7 @@ function test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
-// print_r($_SESSION);
+
 
 $flag = true;
 
@@ -54,6 +54,7 @@ if (isset($_POST['submit'])) {
             }
             $_SESSION['userName']   =  $userName;
             $_SESSION['id']     =  $userId;
+            $_SESSION['isLoggedIN'] = 'success';
             if ($role === 'admin') {
                 $_SESSION['role'] =  'admin';
                 header('Location: ../admin/adminDashboard.php');
@@ -95,9 +96,19 @@ if (isset($_POST['submit'])) {
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2 gradient-custom-2">Welcome back</h2>
+    <h2 class="text-center mt-3 gradient-custom-2">Welcome back</h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <!-- toast after LOGGING OUT -->
+            <?php if (isset($_SESSION['isLogout']) && $_SESSION['isLogout']) { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-success text-white ">
+                        <strong class="me-auto">Logged out successfully!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php }
+            unset($_SESSION['isLogout'])?>
             <span><?php echo $invalidCredentialsErr ?></span>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
                 <div class="mb-3">
