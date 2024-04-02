@@ -35,7 +35,8 @@ if (isset($_POST['newDate'])) {
     $result = $adminObject->showAbsentEmployeesOnDate($date);
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            array_push($absentEmployeesPresent,  $row['name']);
+            $val = [$row['id'] => $row['name']];
+            array_push($absentEmployeesPresent,  $val);
         }
     }
     $resultantJSONArray['absentEmployeesPresent'] = $absentEmployeesPresent;
@@ -45,20 +46,19 @@ if (isset($_POST['newDate'])) {
     $showEmployeesWithLessWorkingHoursYesterdayArrayPast = [];
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $hours = floor( $row['total_seconds'] / 3600);
-            $minutes = floor(( $row['total_seconds'] % 3600) / 60);
+            $hours = floor($row['total_seconds'] / 3600);
+            $minutes = floor(($row['total_seconds'] % 3600) / 60);
             $seconds =  $row['total_seconds'] % 60;
             $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-            $val = $row['name'] . " - " .  $formatted_time;
+            $val = ['id' => $row['id'], 'name' => $row['name'], 'formatted_time' => $formatted_time];
             array_push($showEmployeesWithLessWorkingHoursYesterdayArrayPast, $val);
-            // $showEmployeesWithLessWorkingHoursYesterdayPast[$row['name']] = $row['total_seconds'];
         }
     }
     $showEmployeesWithLessWorkingHoursYesterdayArrayCountPast = sizeof($showEmployeesWithLessWorkingHoursYesterdayArrayPast);
     $resultantJSONArray['showEmployeesWithLessWorkingHoursYesterdayArrayCountPast'] = $showEmployeesWithLessWorkingHoursYesterdayArrayCountPast;
     $resultantJSONArray['showEmployeesWithLessWorkingHoursYesterdayArrayPast'] = $showEmployeesWithLessWorkingHoursYesterdayArrayPast;
     // 2nd card adata ends
-    
+
     $result = $adminObject->totalEmployeesCount($yesterdayDate);
     $totalEmployeesYesterdayCountPast = 0;
     if (mysqli_num_rows($result) > 0) {
@@ -66,27 +66,28 @@ if (isset($_POST['newDate'])) {
         $totalEmployeesYesterdayCountPast =  $row['totalEmployeesCount'];
     }
     $resultantJSONArray['totalEmployeesYesterdayCountPast'] = $totalEmployeesYesterdayCountPast;
-    
-    
+
+
     $result = $adminObject->totalCheckedInUsersOnDate($yesterdayDate);
     $totalCheckedInUsersYesterdayCountPast  = mysqli_num_rows($result);
     $resultantJSONArray['totalCheckedInUsersYesterdayCountPast'] = $totalCheckedInUsersYesterdayCountPast;
-    
+
     $absentEmployeesPast = [];
     $result = $adminObject->showAbsentEmployeesOnDate($yesterdayDate);
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            array_push($absentEmployeesPast,  $row['name']);
+            $val = [$row['id'] => $row['name']];
+            array_push($absentEmployeesPast,  $val);
         }
     }
     $resultantJSONArray['absentEmployeesPast'] = $absentEmployeesPast;
     // 3rd card data ends
-    
+
     $result = $projectObject->employeesWithNoPMSYesterday($date);
     $employeesWithNoPMSYesterdayArrayPast = [];
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            array_push($employeesWithNoPMSYesterdayArrayPast,  $row['name']);
+            $employeesWithNoPMSYesterdayArrayPast[] = ['id' => $row['id'], 'name' => $row['name']];
         }
     }
     $employeesWithNoPMSYesterdayArrayCountPast = sizeof($employeesWithNoPMSYesterdayArrayPast);
@@ -94,5 +95,4 @@ if (isset($_POST['newDate'])) {
     $resultantJSONArray['employeesWithNoPMSYesterdayArrayPast'] = $employeesWithNoPMSYesterdayArrayPast;
 
     echo json_encode($resultantJSONArray);
-
 }

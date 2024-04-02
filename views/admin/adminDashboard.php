@@ -108,7 +108,7 @@ $date = date('Y-m-d');
             </div>
             <div>
                 <label>Choose Date:</label>
-                <input type="date" class='p-2 mx-2 border border-info focus-ring rounded-2' name="inputDate" id='inputDate' onchange="changeAnalytics(this.value)" min='2024-03-16' max="<?= date('Y-m-d'); ?>" value='<?php echo $date; ?>'>
+                <input type="date" class='p-2 mx-2 border border-info focus-ring rounded-2' name="inputDate" id='inputDate' onchange="changeAnalytics(this.value)" max="<?= date('Y-m-d'); ?>" value='<?php echo $date; ?>'>
             </div>
         </div>
         <div class="my-5 d-flex justify-content-evenly" id="updatedContent">
@@ -133,11 +133,11 @@ $date = date('Y-m-d');
                             </p>
                         </div>
                         <?php
-                        $absentEmployees = [];
+                        $absentEmployeesPresent = [];
                         $result = $adminObject->showAbsentEmployeesOnDate($date);
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
-                                array_push($absentEmployees,  $row['name']);
+                                $absentEmployeesPresent[] = ['id' => $row['id'], 'name' => $row['name']];
                             }
                         }
                         ?>
@@ -150,12 +150,13 @@ $date = date('Y-m-d');
                                 </h2>
                                 <div id="flush-collapseAbsentees" class="accordion-collapse collapse" data-bs-parent="#accordionAbsentees">
                                     <div id='absentEmployeesPresent' class="accordion-body">
-
-                                        <?php
-                                        foreach ($absentEmployees as $name) {
-                                        ?>
-                                            <p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                                    } ?>
+                                        <?php foreach ($absentEmployeesPresent as $employee) : ?>
+                                            <p>
+                                                <a href="<?php echo "http://localhost/php_training/views/admin/trackEmployee.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo htmlspecialchars($employee['name']); ?>
+                                                </a>
+                                            </p>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
@@ -172,11 +173,15 @@ $date = date('Y-m-d');
                                 < 8.45Hrs. on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
                             </p>
                             <?php
-                            $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday($date);
                             $showEmployeesWithLessWorkingHoursYesterdayArray = [];
+                            $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday($date);
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
-                                    $showEmployeesWithLessWorkingHoursYesterdayArray[$row['name']] = $row['total_seconds'];
+                                    $hours = floor($row['total_seconds'] / 3600);
+                                    $minutes = floor(($row['total_seconds'] % 3600) / 60);
+                                    $seconds = $row['total_seconds'] % 60;
+                                    $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+                                    $showEmployeesWithLessWorkingHoursYesterdayArray[] = ['id' => $row['id'], 'name' => $row['name'], 'formatted_time' => $formatted_time];
                                 }
                             }
                             ?>
@@ -191,16 +196,13 @@ $date = date('Y-m-d');
                                 </h2>
                                 <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
                                     <div id='showEmployeesWithLessWorkingHoursYesterdayArrayPast' class="accordion-body">
-                                        <?php
-                                        foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name => $total_seconds) {
-                                            $hours = floor($total_seconds / 3600);
-                                            $minutes = floor(($total_seconds % 3600) / 60);
-                                            $seconds = $total_seconds % 60;
-                                            $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-                                        ?><p><?php echo explode(' ', $name)[0] . " - $formatted_time" ?></p>
-                                            <hr><?php
-                                            }
-                                                ?>
+                                        <?php foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $employee) : ?>
+                                            <p>
+                                                <a href="<?php echo "http://localhost/php_training/views/admin/employeeWorkingHourDetails.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo $employee['name'] . " - " . $employee['formatted_time']; ?>
+                                                </a>
+                                            </p>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +215,7 @@ $date = date('Y-m-d');
                     <img class="card-img-top p-2 w-75 m-auto" src="../../Images/past-calendar.png" alt="Card image cap">
                     <div class="card-body">
                         <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                            <p class="card-title fs-6">Attendance on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
+                            <p class="card-title fs-6">Attendance on <br />(<span id='yesterdayAttendanceDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
                             </p>
                             <?php
                             $yesterdayDate = date('Y-m-d', strtotime("-1 days"));
@@ -231,11 +233,11 @@ $date = date('Y-m-d');
                             </p>
                         </div>
                         <?php
-                        $absentEmployees = [];
+                        $absentEmployeesPast = [];
                         $result = $adminObject->showAbsentEmployeesOnDate($yesterdayDate);
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
-                                array_push($absentEmployees,  $row['name']);
+                                $absentEmployeesPast[] = ['id' => $row['id'], 'name' => $row['name']];
                             }
                         }
                         ?>
@@ -248,10 +250,13 @@ $date = date('Y-m-d');
                                 </h2>
                                 <div id="flush-showEmployeesYesterdayAttendance" class="accordion-collapse collapse" data-bs-parent="#showEmployeesYesterdayAttendance">
                                     <div id='absentEmployeesPast' class="accordion-body">
-                                        <?php
-                                        foreach ($absentEmployees as $name) {
-                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                                } ?>
+                                        <?php foreach ($absentEmployeesPast as $employee) : ?>
+                                            <p>
+                                                <a href="<?php echo "http://localhost/php_training/views/admin/trackEmployee.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo $employee['name']; ?>
+                                                </a>
+                                            </p>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
@@ -267,14 +272,14 @@ $date = date('Y-m-d');
                             <p class="card-title fs-6">Missed PMS on <br />(<span id='yesterdayPMSDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>): </p>
                             <?php
                             $result = $projectObject->employeesWithNoPMSYesterday($date);
-                            $employeesWithNoPMSYesterdayArray = [];
+                            $employeesWithNoPMSYesterdayArrayPast = [];
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
-                                    array_push($employeesWithNoPMSYesterdayArray,  $row['name']);
+                                    $employeesWithNoPMSYesterdayArrayPast[] = ['id' => $row['id'], 'name' => $row['name']];
                                 }
                             }
                             ?>
-                            <p id='employeesWithNoPMSYesterdayArrayCountPast' class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
+                            <p id='employeesWithNoPMSYesterdayArrayCountPast' class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArrayPast); ?></p>
                         </div>
                         <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
                             <div class="accordion-item">
@@ -285,11 +290,13 @@ $date = date('Y-m-d');
                                 </h2>
                                 <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
                                     <div id='employeesWithNoPMSYesterdayArrayPast' class="accordion-body">
-                                        <?php
-                                        foreach ($employeesWithNoPMSYesterdayArray as $name) {
-                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                                                                }
-                                                                                    ?>
+                                        <?php foreach ($employeesWithNoPMSYesterdayArrayPast as $employee) : ?>
+                                            <p>
+                                                <a href="<?php echo "http://localhost/php_training/views/admin/employeePMSDetails.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo $employee['name']; ?>
+                                                </a>
+                                            </p>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
@@ -398,9 +405,35 @@ $date = date('Y-m-d');
                                 $('#totalCheckedInUsersTodayCountPresent').removeClass('text-success');
                                 $('#totalCheckedInUsersTodayCountPresent').addClass('text-danger');
                             }
-                            $('#absentEmployeesPresent').text(response.absentEmployeesPresent);
+
+                            var absentEmployeesList = response.absentEmployeesPresent.map(function(employee) {
+                                var id = Object.keys(employee)[0];
+                                var name = employee[id];
+                                var loc = window.location.pathname;
+                                var dir = loc.substring(0, loc.lastIndexOf('/'));
+                                var profileUrl = "http://localhost/php_training/views/admin" + "/trackEmployee.php?id=" + id;
+                                var $p = $('<p></p>');
+                                var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
+                                $p.append($x);
+                                return $p;
+                            });
+                            $('#absentEmployeesPresent').empty().append(absentEmployeesList);
+
                             $('#showEmployeesWithLessWorkingHoursYesterdayArrayCountPast').text(response.showEmployeesWithLessWorkingHoursYesterdayArrayCountPast);
-                            $('#showEmployeesWithLessWorkingHoursYesterdayArrayPast').text(response.showEmployeesWithLessWorkingHoursYesterdayArrayPast);
+
+                            var lessWorkingEmployeesList = response.showEmployeesWithLessWorkingHoursYesterdayArrayPast.map(function(employee) {
+                                var id = employee['id'];
+                                // console.log(id);
+                                var name = employee['name'];
+                                var formattedTime = employee['formatted_time'];
+                                var profileUrl = "http://localhost/php_training/views/admin/employeeWorkingHourDetails.php?id=" + id;
+                                var $p = $('<p></p>');
+                                var $x = $('<a></a>').attr("href", profileUrl).text(name + " - " + formattedTime).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
+                                $p.append($x);
+                                return $p;
+                            });
+                            $('#showEmployeesWithLessWorkingHoursYesterdayArrayPast').empty().append(lessWorkingEmployeesList);
+
                             $('#totalEmployeesYesterdayCountPast').text(response.totalEmployeesYesterdayCountPast);
                             $('#totalCheckedInUsersYesterdayCountPast').text(response.totalCheckedInUsersYesterdayCountPast);
                             if (response.totalCheckedInUsersYesterdayCountPast >= 0.75 * response.totalEmployeesYesterdayCountPast) {
@@ -410,9 +443,32 @@ $date = date('Y-m-d');
                                 $('#totalCheckedInUsersYesterdayCountPast').removeClass('text-success');
                                 $('#totalCheckedInUsersYesterdayCountPast').addClass('text-danger');
                             }
-                            $('#absentEmployeesPast').text(response.absentEmployeesPast);
+
+                            var absentEmployeesListPast = response.absentEmployeesPast.map(function(employee) {
+                                var id = Object.keys(employee)[0];
+                                var name = employee[id];
+                                var loc = window.location.pathname;
+                                var dir = loc.substring(0, loc.lastIndexOf('/'));
+                                var profileUrl = "http://localhost/php_training/views/admin" + "/trackEmployee.php?id=" + id;
+                                var $p = $('<p></p>');
+                                var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
+                                $p.append($x);
+                                return $p;
+                            });
+                            $('#absentEmployeesPast').empty().append(absentEmployeesListPast);
+
                             $('#employeesWithNoPMSYesterdayArrayCountPast').text(response.employeesWithNoPMSYesterdayArrayCountPast);
-                            $('#employeesWithNoPMSYesterdayArrayPast').text(response.employeesWithNoPMSYesterdayArrayPast);
+
+                            var employeesWithNoPMSYesterdayListPast = response.employeesWithNoPMSYesterdayArrayPast.map(function(employee) {
+                                var id = employee['id'];
+                                var name = employee['name'];
+                                var profileUrl = "http://localhost/php_training/views/admin/employeePMSDetails.php?id=" + id;
+                                var $p = $('<p></p>');
+                                var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
+                                $p.append($x);
+                                return $p;
+                            });
+                            $('#employeesWithNoPMSYesterdayArrayPast').empty().append(employeesWithNoPMSYesterdayListPast);
                         }
                     });
                 }
@@ -429,6 +485,7 @@ $date = date('Y-m-d');
             document.getElementById("inputDate").values = val;
             document.getElementById("todayAttendanceDate").innerHTML = val;
             document.getElementById("yesterdayWorkingDate").innerHTML = formattedYesterdayDate;
+            document.getElementById("yesterdayAttendanceDate").innerHTML = formattedYesterdayDate;
             document.getElementById("yesterdayPMSDate").innerHTML = formattedYesterdayDate;
         }
 
