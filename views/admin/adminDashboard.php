@@ -50,13 +50,23 @@ $date = date('Y-m-d');
                 <a class="nav-link" href="viewAllProjects.php">Projects</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../start/login.php">Logout</a>
+                <a class="nav-link" href="../start/login.php" onclick="<?php $_SESSION['isLogout'] = true;?>">Logout</a>
             </li>
         </ul>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-1'>admin</span> dashboard</h2>
 
+    <!-- toast after successful logged in -->
+    <?php if (isset($_SESSION['isLoggedIN']) && $_SESSION['isLoggedIN'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Logged In successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['isLoggedIN'] = '' ?>
     <!-- toast after successful added -->
     <?php if (isset($_SESSION['AddStatus']) && $_SESSION['AddStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -152,8 +162,8 @@ $date = date('Y-m-d');
                                     <div id='absentEmployeesPresent' class="accordion-body">
                                         <?php foreach ($absentEmployeesPresent as $employee) : ?>
                                             <p>
-                                                <a href="<?php echo "http://localhost/php_training/views/admin/trackEmployee.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                                                    <?php echo htmlspecialchars($employee['name']); ?>
+                                                <a href="http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>/trackEmployee.php?id=<?php echo urlencode($employee['id']); ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo htmlspecialchars($employee['name'], ENT_QUOTES, 'UTF-8'); ?>
                                                 </a>
                                             </p>
                                         <?php endforeach; ?>
@@ -169,8 +179,8 @@ $date = date('Y-m-d');
                     <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
                     <div class="card-body">
                         <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                            <p class="card-title fs-6">Work Time
-                                < 8.45Hrs. on <br />(<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
+                            <p class="card-title fs-6">Present & Working
+                                < 8.45 hrs. on (<span id='yesterdayWorkingDate'><?php echo date("Y-m-d", strtotime("-1 day", strtotime($date))); ?></span>):
                             </p>
                             <?php
                             $showEmployeesWithLessWorkingHoursYesterdayArray = [];
@@ -198,9 +208,10 @@ $date = date('Y-m-d');
                                     <div id='showEmployeesWithLessWorkingHoursYesterdayArrayPast' class="accordion-body">
                                         <?php foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $employee) : ?>
                                             <p>
-                                                <a href="<?php echo "http://localhost/php_training/views/admin/employeeWorkingHourDetails.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                                                    <?php echo $employee['name'] . " - " . $employee['formatted_time']; ?>
+                                                <a href="http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>/employeeWorkingHourDetails.php?id=<?php echo urlencode($employee['id']); ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                    <?php echo htmlspecialchars($employee['name'], ENT_QUOTES, 'UTF-8') . " - " . htmlspecialchars($employee['formatted_time'], ENT_QUOTES, 'UTF-8'); ?>
                                                 </a>
+
                                             </p>
                                         <?php endforeach; ?>
                                     </div>
@@ -252,7 +263,7 @@ $date = date('Y-m-d');
                                     <div id='absentEmployeesPast' class="accordion-body">
                                         <?php foreach ($absentEmployeesPast as $employee) : ?>
                                             <p>
-                                                <a href="<?php echo "http://localhost/php_training/views/admin/trackEmployee.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                <a href="http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>/trackEmployee.php?id=<?php echo urlencode($employee['id']); ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                                                     <?php echo $employee['name']; ?>
                                                 </a>
                                             </p>
@@ -292,7 +303,7 @@ $date = date('Y-m-d');
                                     <div id='employeesWithNoPMSYesterdayArrayPast' class="accordion-body">
                                         <?php foreach ($employeesWithNoPMSYesterdayArrayPast as $employee) : ?>
                                             <p>
-                                                <a href="<?php echo "http://localhost/php_training/views/admin/employeePMSDetails.php?id=" . $employee['id']; ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                                <a href="http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>/employeePMSDetails.php?id=<?php echo urlencode($employee['id']); ?>" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                                                     <?php echo $employee['name']; ?>
                                                 </a>
                                             </p>
@@ -354,7 +365,7 @@ $date = date('Y-m-d');
                                     <?php
                                     if (!empty($totalEmployeesWithNoProjectsArray)) {
                                         foreach ($totalEmployeesWithNoProjectsArray as $name) {
-                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                    ?><p class='link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'><?php echo $name ?></p><?php
                                                                             }
                                                                         }
                                                                                 ?>
@@ -409,9 +420,7 @@ $date = date('Y-m-d');
                             var absentEmployeesList = response.absentEmployeesPresent.map(function(employee) {
                                 var id = Object.keys(employee)[0];
                                 var name = employee[id];
-                                var loc = window.location.pathname;
-                                var dir = loc.substring(0, loc.lastIndexOf('/'));
-                                var profileUrl = "http://localhost/php_training/views/admin" + "/trackEmployee.php?id=" + id;
+                                var profileUrl = "http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>" + "/trackEmployee.php?id=" + id;
                                 var $p = $('<p></p>');
                                 var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
                                 $p.append($x);
@@ -423,10 +432,9 @@ $date = date('Y-m-d');
 
                             var lessWorkingEmployeesList = response.showEmployeesWithLessWorkingHoursYesterdayArrayPast.map(function(employee) {
                                 var id = employee['id'];
-                                // console.log(id);
                                 var name = employee['name'];
                                 var formattedTime = employee['formatted_time'];
-                                var profileUrl = "http://localhost/php_training/views/admin/employeeWorkingHourDetails.php?id=" + id;
+                                var profileUrl = "http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>" + "/employeeWorkingHourDetails.php?id=" + id;
                                 var $p = $('<p></p>');
                                 var $x = $('<a></a>').attr("href", profileUrl).text(name + " - " + formattedTime).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
                                 $p.append($x);
@@ -447,9 +455,7 @@ $date = date('Y-m-d');
                             var absentEmployeesListPast = response.absentEmployeesPast.map(function(employee) {
                                 var id = Object.keys(employee)[0];
                                 var name = employee[id];
-                                var loc = window.location.pathname;
-                                var dir = loc.substring(0, loc.lastIndexOf('/'));
-                                var profileUrl = "http://localhost/php_training/views/admin" + "/trackEmployee.php?id=" + id;
+                                var profileUrl = "http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>" + "/trackEmployee.php?id=" + id;
                                 var $p = $('<p></p>');
                                 var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
                                 $p.append($x);
@@ -462,7 +468,7 @@ $date = date('Y-m-d');
                             var employeesWithNoPMSYesterdayListPast = response.employeesWithNoPMSYesterdayArrayPast.map(function(employee) {
                                 var id = employee['id'];
                                 var name = employee['name'];
-                                var profileUrl = "http://localhost/php_training/views/admin/employeePMSDetails.php?id=" + id;
+                                var profileUrl = "http://<?php echo $_SERVER['HTTP_HOST'] . "/" . trim(dirname($_SERVER['PHP_SELF']), '/\\'); ?>" + "/employeePMSDetails.php?id=" + id;
                                 var $p = $('<p></p>');
                                 var $x = $('<a></a>').attr("href", profileUrl).text(name).addClass("link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover");
                                 $p.append($x);
@@ -478,10 +484,9 @@ $date = date('Y-m-d');
 
 
         function changeAnalytics(val) {
-            var pastDate = new Date(val);
-            var yesterdayDate = new Date(new Date().setDate(pastDate.getDate() - 1));
-            var formattedYesterdayDate = formatDate(yesterdayDate);
-            // console.log(formattedYesterdayDate);
+            var tempDate = new Date(val);
+            tempDate.setDate(tempDate.getDate() - 1);
+            var formattedYesterdayDate = formatDate(tempDate);
             document.getElementById("inputDate").values = val;
             document.getElementById("todayAttendanceDate").innerHTML = val;
             document.getElementById("yesterdayWorkingDate").innerHTML = formattedYesterdayDate;

@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddProjectStatus'] = 'success';
             header("Location: viewAllProjects.php");
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+        } else echo "<br>Error occured while inserting into table";
     }
 }
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">New <span class='gradient-custom-2'>Project</span> Registration</h2>
+    <h2 class="text-center mt-5">New <span class='gradient-custom-2'>Project</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">

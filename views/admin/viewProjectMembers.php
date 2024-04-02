@@ -48,7 +48,7 @@ function test_input($data)
             <img src="../../Images/mainIcon.gif" alt='svg here'>
             <span class='fw-bold text-success'>EmployeeTracker.com</span>
         </a>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav mb-lg-0">
             <li class="nav-item">
                 <a class="nav-link" href="viewAllProjects.php">Back</a>
             </li>
@@ -69,7 +69,7 @@ function test_input($data)
     }
     ?>
 
-    <h2 class="text-center mt-2"><span class='gradient-custom-2'>All</span> Member/s in <span class="gradient-custom-1"><?php echo $title ?></span> Project</h2>
+    <h2 class="text-center mt-5"><span class='gradient-custom-2'>All</span> Member/s in <span class="gradient-custom-1"><?php echo $title ?></span> Project</h2>
     <div class="container mt-5 px-5 w-100">
         <table>
             <thead>

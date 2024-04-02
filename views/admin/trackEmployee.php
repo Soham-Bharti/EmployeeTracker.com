@@ -78,12 +78,12 @@ else header('Location: ../start/login.php');
                 <?php
                 if ($showStatus === 'check-in') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='text-success fw-bold'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='gradient-custom-3 fw-bold'><?php echo $showStatus ?></span></h4>
                 <?php } else if ($showStatus === 'check-out') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='text-danger fw-bold'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='gradient-custom-1 fw-bold'><?php echo $showStatus ?></span></h4>
                 <?php } else { ?>
-                    <h4 class="text-center mt-3">Emp will do <span class='text-warning fw-bold'>FIRST</span> check-in!</h4>
+                    <h4 class="text-center mt-3">Emp will do <span class='gradient-custom-2 fw-bold'>FIRST</span> check-in!</h4>
                 <?php } ?>
             </div>
         </div>

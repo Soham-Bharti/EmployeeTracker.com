@@ -62,18 +62,18 @@ if (isset($_POST['submit'])) {
         $passwordErr = 'Required';
         $flag = false;
     }
-    // else {
-    //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
-    //     if (!preg_match($password_regex, $password)) {
-    //         $passwordErr = "Check that a password:<br>
-    //         Has minimum 8 characters in length<br>
-    //         At least one uppercase English letter<br>
-    //         At least one lowercase English letter<br>
-    //         At least one digit<br>
-    //         At least one special character";
-    //         $flag = false;
-    //     }
-    // }
+    else {
+        $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+        if (!preg_match($password_regex, $password)) {
+            $passwordErr = "Check that a password:<br>
+            Has minimum 8 characters in length<br>
+            At least one uppercase English letter<br>
+            At least one lowercase English letter<br>
+            At least one digit<br>
+            At least one special character";
+            $flag = false;
+        }
+    }
 
     if (empty($confirm_password)) {
         $confirm_passwordErr = 'Required';
