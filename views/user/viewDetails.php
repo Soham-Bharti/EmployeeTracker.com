@@ -87,7 +87,7 @@ if (isset($desiredUserId)) {
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='gradient-custom-2'><?php echo $name ?></span> - All Details</h2>
+    <h2 class="text-center mt-4"><span class='gradient-custom-2'><?php echo $name ?></span> - All Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">

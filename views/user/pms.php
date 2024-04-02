@@ -45,7 +45,7 @@ if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to your <span class='gradient-custom-2'>PMS</span> dashboard</h2>
+    <h2 class="text-center mt-5">Welcome to your <span class='gradient-custom-2'>PMS</span> dashboard</h2>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>

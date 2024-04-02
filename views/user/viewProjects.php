@@ -41,7 +41,7 @@ if (isset($_SESSION["id"])) $desiredUserId = $_SESSION["id"];
     </nav>
     <!-- nav ends -->
     <div class="container mt-5 px-5">
-        <h2 class="text-center mt-5">Showing your <span class='gradient-custom-2'>assigned Projects'</span> details</h2>
+        <h2 class="text-center mt-">Showing your <span class='gradient-custom-2'>assigned Projects'</span> details</h2>
         <div class="mt-3">
             <table id="projectsTable" class="table table-striped table-hover">
                 <thead>

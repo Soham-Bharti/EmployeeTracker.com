@@ -56,12 +56,22 @@ if (isset($_POST['check-out-submit'])) {
                 <a class="nav-link" href="changePassword.php">Change Password</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../start/login.php">Logout</a>
+                <a class="nav-link" href="../start/login.php" onclick="<?php $_SESSION['isLogout'] = true; ?>">Logout</a>
             </li>
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the <span class='gradient-custom-2'>User</span> dashboard</h2>
+    <h2 class="text-center mt-5">Welcome to the <span class='gradient-custom-2'>User</span> dashboard</h2>
+    <!-- toast after successful logged in -->
+    <?php if (isset($_SESSION['isLoggedIN']) && $_SESSION['isLoggedIN'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Logged In successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['isLoggedIN'] = '' ?>
     <?php
     $showStatus = '';
     $result = $userObject->showEmployeeCheckOutTime();

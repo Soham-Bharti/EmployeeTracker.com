@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Add <span class='gradient-custom-2'>Daily</span> <span class='gradient-custom-2'>Task</span></h2>
+    <h2 class="text-center mt-5">Add <span class='gradient-custom-2'>Daily</span> <span class='gradient-custom-2'>Task</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class='text-danger text-center fw-bold h4'><?php echo $Err ?></div>

@@ -69,12 +69,12 @@ $userObject = new User($desiredUserId);
                 <?php
                 if ($showStatus === 'check-in') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold text-success'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold gradient-custom-3'><?php echo $showStatus ?></span></h4>
                 <?php } else if ($showStatus === 'check-out') {
                 ?>
-                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold text-danger'><?php echo $showStatus ?></span></h4>
+                    <h4 class="text-center mt-3">Emp is currently <span class='fw-bold gradient-custom-1'><?php echo $showStatus ?></span></h4>
                 <?php } else { ?>
-                    <h4 class="text-center mt-3">Emp will do <span class='fw-bold text-warning'>FIRST</span> check-in!</h4>
+                    <h4 class="text-center mt-3">Emp will do <span class='fw-bold gradient-custom-2'>FIRST</span> check-in!</h4>
                 <?php } ?>
             </div>
         </div>

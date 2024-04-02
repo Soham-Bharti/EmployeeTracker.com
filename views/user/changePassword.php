@@ -117,7 +117,7 @@ if (isset($_POST['change'])) {
         </ul>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">Change your current <span class='gradient-custom-1'>Password</span></h2>
+    <h2 class="text-center mt-5">Change your current <span class="gradient-custom-2">Password</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
